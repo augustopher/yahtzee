@@ -1,4 +1,4 @@
-from .dice import Die
+from ..dice import Die
 
 from abc import ABC, abstractmethod
 from enum import Enum
