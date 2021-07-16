@@ -19,11 +19,12 @@ def test_die_roll_values():
 
 def test_die_roll_update(monkeypatch):
     """Checks that the showing face is updated based on the roll value."""
+    die = Die(sides=6)
+
     def mock_roll(self):
         return 2
     monkeypatch.setattr(Die, "_roll_die", mock_roll)
 
-    die = Die(sides=6)
     die.roll()
 
     assert die.showing_face == 2
