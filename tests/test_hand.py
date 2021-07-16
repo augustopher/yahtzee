@@ -16,5 +16,5 @@ def test_hand_init_no_dice():
     """Checks that init values are set when no dice are specified."""
     hand = Hand()
 
-    assert len(hand.dice) == 6
-    assert [die.faces for die in hand.dice] == [list(range(1, 7)) for _ in range(6)]
+    assert len(hand.dice) == 5
+    assert [die.faces for die in hand.dice] == [list(range(1, 7)) for _ in range(5)]
