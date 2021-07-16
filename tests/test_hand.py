@@ -18,3 +18,15 @@ def test_hand_init_no_dice():
 
     assert len(hand.dice) == 5
     assert [die.faces for die in hand.dice] == [list(range(1, 7)) for _ in range(5)]
+
+def test_hand_roll_dice(monkeypatch):
+    """Checks that rolling the dice updates the faces."""
+    hand = Hand()
+
+    def mock_roll(self):
+        return 2
+    monkeypatch.setattr(Die, "_roll_die", mock_roll)
+
+    hand.roll_dice(dice=list(range(1, 6)))
+
+    assert [die.showing_face for die in hand.dice] == [2 for _ in range(5)]

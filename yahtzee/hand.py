@@ -11,9 +11,8 @@ class Hand:
         """Generates a set of dice, using five standard 6-sided dice."""
         return [Die(sides=6) for _ in range(5)]
 
-    def roll_dice(dice: List[int]) -> None:
+    def roll_dice(self, dice: List[int]) -> None:
         """Rolls the selected dice."""
-        for idx, die in self.dice:
-            if idx in dice:
-                die.roll()
+        for idx in dice:
+            self.dice[idx - 1].roll()
         return None
