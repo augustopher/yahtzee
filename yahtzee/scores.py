@@ -22,6 +22,17 @@ class ScoringRule(ABC):
         """Method to score a given set of dice."""
         pass
 
+class ChanceScoringRule(ScoringRule):
+    """Rules which take any 5 dice."""
+    def __init__(self, name: str, section: Section = Section.LOWER):
+        self.name = name
+        self.section = section
+
+    def score(self, dice: List[Die]) -> int:
+        """Method to score a given set of dice.
+        Scores as the total of all dice."""
+        return sum([die.showing_face for die in dice])
+
 class MultiplesScoringRule(ScoringRule):
     """Rules which look for multiple dice with a specific face value."""
     def __init__(self, name: str, face_value: int, section: Section = Section.UPPER):
@@ -57,7 +68,7 @@ class NofKindScoringRule(ScoringRule):
             if self.override_score:
                 score = self.override_score
             else:
-                score = sum([die.face_value for die in Dice])
+                score = sum([die.showing_face for die in dice])
         else:
             score = 0
         return score
@@ -112,7 +123,7 @@ class SmallStraightScoringRule(ScoringRule):
 
 def _find_matching_dice(dice: List[Die], face_value: int) -> List[Union[Die, None]]:
     """Helper to find dice with the expected face value."""
-    matching_dice = [die for die in dice if die.face_value == face_value]
+    matching_dice = [die for die in dice if die.showing_face == face_value]
     return matching_dice
 
 def _validate_nofkind(dice: List[Die], n: int) -> bool:
@@ -150,5 +161,6 @@ def _validate_small_straight(dice: List[Die]) -> bool:
     """Helper to check for a small straight
     (4 length sequence from pool of 5, in order, no missing values)."""
     # pull all combinations of 4 dice, check if any are a straight
-    die_subsets = combinations(dice, 4)
-    return any([_validate_straight(list(subset)) for subset in die_subsets])
+    faces = [die.showing_face for die in dice]
+    face_subsets = combinations(faces, len(faces) - 1)
+    return any([_validate_straight(list(subset)) for subset in face_subsets])
