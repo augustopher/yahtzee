@@ -7,9 +7,9 @@ from .validators import (
     _validate_large_straight,
     _validate_small_straight,
 )
-from .scoresheet import Section
 
 from abc import ABC, abstractmethod
+from enum import Enum
 from typing import List, Optional, Union
 
 # scores that are constant, regardless of dice values
@@ -17,6 +17,10 @@ SCORE_FULL_HOUSE: int = 25
 SCORE_SMALL_STRAIGHT: int = 30
 SCORE_LARGE_STRAIGHT: int = 40
 SCORE_YAHTZEE: int = 50
+
+class Section(Enum):
+    UPPER: str = "upper"
+    LOWER: str = "lower"
 
 class ScoringRule(ABC):
     """Generic scoring rule."""
