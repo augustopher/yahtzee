@@ -1,7 +1,8 @@
 from ..dice import Die
-from .rules import ScoringRule, Section
+from .rules import ScoringRule
 from .validators import _find_duplicates
 
+from enum import Enum
 from typing import List, Union
 
 from tabulate import tabulate
@@ -11,6 +12,10 @@ class DuplicateRuleNamesError(ValueError):
 
 class RuleAlreadyScoredError(ValueError):
     pass
+
+class Section(Enum):
+    UPPER: str = "upper"
+    LOWER: str = "lower"
 
 class Scoresheet():
     """Representation of a scoring sheet."""
