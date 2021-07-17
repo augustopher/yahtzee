@@ -1,6 +1,7 @@
 from yahtzee.scoring.scoresheet import (
     Scoresheet,
     DuplicateRuleNamesError,
+    RuleAlreadyScoredError,
 )
 from yahtzee.scoring.rules import (
     ChanceScoringRule,
@@ -49,6 +50,21 @@ def test_get_rule_from_name():
     result = sheet._get_rule_from_name(name="rule2")
     assert result == rules[1]
 
+@pytest.mark.parametrize("score_rule, expected",[
+    ("rule1", False),
+    ("rule2", True),
+])
+def test_check_rule_not_scored(score_rule, expected):
+    """Checks that a rule already scored or not, properly."""
+    rules = [
+        ChanceScoringRule(name="rule1"),
+        ChanceScoringRule(name="rule2"),
+    ]
+    sheet = Scoresheet(rules=rules)
+    sheet.scores[score_rule] = 1
+    result = sheet._check_rule_not_scored(name="rule1")
+    assert result is expected
+
 def test_update_rule_score():
     """Check that a rule's score is updated properly from a requested name."""
     rules = [
@@ -69,6 +85,21 @@ def test_update_rule_score():
     assert all([
         score == expected_scores[rule] for rule, score in sheet.scores.items()
     ])
+
+def test_update_rule_score_error():
+    """Check that scoring a previously-scored rule raises
+    the appropriate error."""
+    rules = [
+        ChanceScoringRule(name="rule1"),
+        ChanceScoringRule(name="rule2"),
+    ]
+    dice = [Die(starting_face=1), Die(starting_face=2)]
+
+    sheet = Scoresheet(rules=rules)
+
+    sheet.update_rule_score(name="rule1", dice=dice)
+    with pytest.raises(RuleAlreadyScoredError, match=r"Rule.*"):
+        sheet.update_rule_score(name="rule1", dice=dice)
 
 def test_update_score():
     """Check that a rule's score is updated properly from a requested index."""

@@ -9,6 +9,9 @@ from tabulate import tabulate
 class DuplicateRuleNamesError(ValueError):
     pass
 
+class RuleAlreadyScoredError(ValueError):
+    pass
+
 class Scoresheet():
     """Representation of a scoring sheet."""
     def __init__(self, rules: List[ScoringRule]):
@@ -37,6 +40,10 @@ class Scoresheet():
 
     def update_rule_score(self, name: str, dice: List[Die]) -> None:
         """Updates the score for a given rule, based on the given dice."""
+        if not self._check_rule_not_scored(name=name):
+            raise RuleAlreadyScoredError(
+                f"Rule {name} has already been scored."
+            )
         selected_rule = self._get_rule_from_name(name=name)
         self.scores[name] = selected_rule.score(dice=dice)
         return None
@@ -48,6 +55,10 @@ class Scoresheet():
     def _get_name_from_index(self, index: int) -> str:
         """Helper to retrieve the rule name from the user-input index."""
         return self.rules_map[index]
+
+    def _check_rule_not_scored(self, name: str) -> bool:
+        """Checks that a rule is not already scored."""
+        return self.scores[name] is None
 
     @staticmethod
     def _generate_scores_header() -> List[str]:
