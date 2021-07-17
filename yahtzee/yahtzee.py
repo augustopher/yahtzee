@@ -15,6 +15,6 @@ DEFAULT_RULES = [
     rules.FullHouseScoringRule(name="Full House"),
     rules.SmallStraightScoringRule(name="Small Straight"),
     rules.LargeStraightScoringRule(name="Large Straight"),
-    rules.NofKindScoringRule(name="YAHTZEE", n=5, override_score=rules.SCORE_YAHTZEE),
+    rules.YahtzeeScoringRule(name="YAHTZEE"),
     rules.ChanceScoringRule(name="Chance"),
 ]
