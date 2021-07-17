@@ -22,7 +22,8 @@ class Scoresheet():
         duplicate_names = _find_duplicates(rule_names)
         if duplicate_names:
             raise DuplicateRuleNamesError(
-                f"Rules cannot share names. Duplicate names are: {duplicate_names}."
+                f"Rules cannot share names. Duplicate names are: "
+                f"{duplicate_names}."
             )
         return None
 

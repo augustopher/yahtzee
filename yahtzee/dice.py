@@ -13,7 +13,7 @@ class Die:
 
         if self.showing_face not in self.faces:
             raise IllegalDieValueError(
-                f"Starting face {self.showing_face} is not in valid faces"
+                f"Starting face {self.showing_face} is not in valid faces: "
                 f"{self.faces}."
             )
 
