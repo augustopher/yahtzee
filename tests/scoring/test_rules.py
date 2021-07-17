@@ -9,6 +9,7 @@ import pytest
     ([2,2,3,4,5], 16),
 ])
 def test_score_chance_rule(seq, expected):
+    """Check that Chance rules score correctly."""
     dice = [Die(starting_face=s) for s in seq]
     rule = rules.ChanceScoringRule(name="name")
     result = rule.score(dice=dice)
@@ -20,26 +21,37 @@ def test_score_chance_rule(seq, expected):
     ([2,2,3,4,5], 4),
 ])
 def test_score_multiples_rule(seq, expected):
+    """Check that Multiples rules score correctly."""
     dice = [Die(starting_face=s) for s in seq]
     rule = rules.MultiplesScoringRule(name="name", face_value=2)
     result = rule.score(dice=dice)
     assert result == expected
 
-@pytest.mark.parametrize("seq, override, expected", [
-    ([1,2,3,4,5], None, 0),
-    ([1,1,3,4,5], None, 0),
-    ([1,1,1,4,5], None, 12),
-    ([1,1,1,1,5], None, 9),
-    ([1,1,1,1,1], None, 5),
-    ([1,2,3,4,5], 20, 0),
-    ([1,1,3,4,5], 20, 0),
-    ([1,1,1,4,5], 20, 20),
-    ([1,1,1,1,5], 20, 20),
-    ([1,1,1,1,1], 20, 20),
+@pytest.mark.parametrize("seq, expected", [
+    ([1,2,3,4,5], 0),
+    ([1,1,3,4,5], 0),
+    ([1,1,1,4,5], 12),
+    ([1,1,1,1,5], 9),
+    ([1,1,1,1,1], 5),
 ])
-def test_score_nkind_rule(seq, override, expected):
+def test_score_nkind_rule(seq, expected):
+    """Check that N-of-a-Kind rules score correctly."""
     dice = [Die(starting_face=s) for s in seq]
-    rule = rules.NofKindScoringRule(name="name", n=3, override_score=override)
+    rule = rules.NofKindScoringRule(name="name", n=3)
+    result = rule.score(dice=dice)
+    assert result == expected
+
+@pytest.mark.parametrize("seq, expected", [
+    ([1,2,3,4,5], 0),
+    ([1,1,3,4,5], 0),
+    ([1,1,1,4,5], 0),
+    ([1,1,1,1,5], 0),
+    ([1,1,1,1,1], 5),
+])
+def test_score_yahtzee_rule(seq, expected):
+    """Check that Yahtzee rules score correctly."""
+    dice = [Die(starting_face=s) for s in seq]
+    rule = rules.YahtzeeScoringRule(name="name", score_value=5)
     result = rule.score(dice=dice)
     assert result == expected
 
@@ -50,6 +62,7 @@ def test_score_nkind_rule(seq, override, expected):
     ([1,1,2,2,2], 5),
 ])
 def test_score_full_house_rule(seq, expected):
+    """Check that Full House rules score correctly."""
     dice = [Die(starting_face=s) for s in seq]
     rule = rules.FullHouseScoringRule(name="name", score_value = 5)
     result = rule.score(dice=dice)
@@ -61,6 +74,7 @@ def test_score_full_house_rule(seq, expected):
     ([1,1,2,3,4], 0),
 ])
 def test_score_large_straight_rule(seq, expected):
+    """Check that Large Straight rules score correctly."""
     dice = [Die(starting_face=s) for s in seq]
     rule = rules.LargeStraightScoringRule(name="name", score_value = 5)
     result = rule.score(dice=dice)
@@ -72,7 +86,30 @@ def test_score_large_straight_rule(seq, expected):
     ([1,1,2,3,4], 5),
 ])
 def test_score_small_straight_rule(seq, expected):
+    """Check that Small Straight rules score correctly."""
     dice = [Die(starting_face=s) for s in seq]
     rule = rules.SmallStraightScoringRule(name="name", score_value = 5)
     result = rule.score(dice=dice)
+    assert result == expected
+
+@pytest.mark.parametrize("seq, expected", [
+    ([1,2,3,4,5], 15),
+    ([1,1,3,4,5], 14),
+    ([1,1,1,4,5], 12),
+])
+def test_sum_all_showing_faces(seq, expected):
+    """Check that showing faces are summed correctly."""
+    dice = [Die(starting_face=s) for s in seq]
+    result = rules._sum_all_showing_faces(dice=dice)
+    assert result == expected
+
+@pytest.mark.parametrize("seq, face, expected", [
+    ([1,1,2,2,2], 1, 2),
+    ([1,1,2,2,2], 2, 6),
+    ([1,1,2,2,2], 3, 0),
+])
+def test_sum_all_showing_faces(seq, face, expected):
+    """Check that matching showing faces are summed correctly."""
+    dice = [Die(starting_face=s) for s in seq]
+    result = rules._sum_matching_faces(dice=dice, face_value=face)
     assert result == expected
