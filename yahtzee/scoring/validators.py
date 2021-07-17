@@ -1,6 +1,7 @@
 from ..dice import Die
 
 from itertools import combinations
+from collections import Counter
 from typing import List, Union
 
 def _find_matching_dice(dice: List[Die], face_value: int) -> List[Union[Die, None]]:
@@ -46,3 +47,8 @@ def _validate_small_straight(dice: List[Die]) -> bool:
     faces = [die.showing_face for die in dice]
     face_subsets = combinations(faces, len(faces) - 1)
     return any([_validate_straight(list(subset)) for subset in face_subsets])
+
+def _find_duplicates(values: List) -> List:
+    """Finds any duplicate values in a list."""
+    counts = Counter(values)
+    return [val for val, count in counts.items() if count > 1]

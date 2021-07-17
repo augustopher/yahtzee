@@ -76,3 +76,14 @@ def test_validate_full_house(seq, expected):
     dice = [Die(starting_face=s) for s in seq]
     result = valid._validate_full_house(dice=dice)
     assert result is expected
+
+@pytest.mark.parametrize("vals, expected", [
+    ([1,2,3,4,5], []),
+    ([1,1,3,4,5], [1]),
+    ([1,1,2,2,3], [1,2]),
+    ([1,1,1,1,1], [1]),
+])
+def test_find_duplicates(vals, expected):
+    """Check that duplicates are found properly."""
+    result = valid._find_duplicates(vals)
+    assert sorted(result) == sorted(expected)
