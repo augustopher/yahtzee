@@ -29,6 +29,16 @@ def test_scoresheet_init_dupe_rules_error():
     with pytest.raises(DuplicateRuleNamesError, match=r"Rules cannot.*"):
         result = Scoresheet(rules=rules)
 
+def test_get_name_from_index():
+    """Checks that the correct rule name is retrieved by index."""
+    rules = [
+        ChanceScoringRule(name="rule1"),
+        ChanceScoringRule(name="rule2"),
+    ]
+    sheet = Scoresheet(rules=rules)
+    result = sheet._get_name_from_index(index=1)
+    assert result == rules[0].name
+
 def test_get_rule_from_name():
     """Checks that the correct rule is retrieved by name."""
     rules = [
@@ -40,7 +50,7 @@ def test_get_rule_from_name():
     assert result == rules[1]
 
 def test_update_rule_score():
-    """Check that a rule's score is updated properly."""
+    """Check that a rule's score is updated properly from a requested name."""
     rules = [
         ChanceScoringRule(name="rule1"),
         ChanceScoringRule(name="rule2"),
@@ -50,6 +60,27 @@ def test_update_rule_score():
     sheet = Scoresheet(rules=rules)
 
     sheet.update_rule_score(name="rule1", dice=dice)
+
+    expected_scores = {
+        "rule1": 3,
+        "rule2": None,
+    }
+
+    assert all([
+        score == expected_scores[rule] for rule, score in sheet.scores.items()
+    ])
+
+def test_update_score():
+    """Check that a rule's score is updated properly from a requested index."""
+    rules = [
+        ChanceScoringRule(name="rule1"),
+        ChanceScoringRule(name="rule2"),
+    ]
+    dice = [Die(starting_face=1), Die(starting_face=2)]
+
+    sheet = Scoresheet(rules=rules)
+
+    sheet.update_score(index=1, dice=dice)
 
     expected_scores = {
         "rule1": 3,
