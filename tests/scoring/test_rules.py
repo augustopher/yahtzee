@@ -25,21 +25,16 @@ def test_score_multiples_rule(seq, expected):
     result = rule.score(dice=dice)
     assert result == expected
 
-@pytest.mark.parametrize("seq, override, expected", [
-    ([1,2,3,4,5], None, 0),
-    ([1,1,3,4,5], None, 0),
-    ([1,1,1,4,5], None, 12),
-    ([1,1,1,1,5], None, 9),
-    ([1,1,1,1,1], None, 5),
-    ([1,2,3,4,5], 20, 0),
-    ([1,1,3,4,5], 20, 0),
-    ([1,1,1,4,5], 20, 20),
-    ([1,1,1,1,5], 20, 20),
-    ([1,1,1,1,1], 20, 20),
+@pytest.mark.parametrize("seq, expected", [
+    ([1,2,3,4,5], 0),
+    ([1,1,3,4,5], 0),
+    ([1,1,1,4,5], 12),
+    ([1,1,1,1,5], 9),
+    ([1,1,1,1,1], 5),
 ])
-def test_score_nkind_rule(seq, override, expected):
+def test_score_nkind_rule(seq, expected):
     dice = [Die(starting_face=s) for s in seq]
-    rule = rules.NofKindScoringRule(name="name", n=3, override_score=override)
+    rule = rules.NofKindScoringRule(name="name", n=3)
     result = rule.score(dice=dice)
     assert result == expected
 
