@@ -4,12 +4,12 @@ from typing import List, Optional
 
 class Hand:
     """Representation of the player's hand."""
-    def __init__(self, dice: Optional[List[Die]] = None):
-        self.dice = dice if dice else self._create_dice()
+    def __init__(self, dice: Optional[List[Die]] = None, num_dice: int = 5, dice_sides: int = 6):
+        self.dice = dice if dice else self._create_dice(num=num_dice, sides=dice_sides)
 
-    def _create_dice(self) -> List[Die]:
-        """Generates a set of dice, using five standard 6-sided dice."""
-        return [Die(sides=6) for _ in range(5)]
+    def _create_dice(self, num: int, sides: int) -> List[Die]:
+        """Generates a set of dice."""
+        return [Die(sides=sides) for _ in range(num)]
 
     def roll_dice(self, dice: List[int]) -> None:
         """Rolls the selected dice."""
