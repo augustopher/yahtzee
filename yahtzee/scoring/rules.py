@@ -55,7 +55,7 @@ class PatternConstantScoringRule(ScoringRule):
 
 class PatternVariableScoringRule(ScoringRule):
     """Generic scoring rule, which looks for a particular pattern,
-    and has a constant score value."""
+    and has a variable score value."""
     def __init__(self, name: str, section: Section):
         super().__init__(name=name, section=section)
 
@@ -170,6 +170,6 @@ def _sum_all_showing_faces(dice: List[Die]) -> int:
     return sum([die.showing_face for die in dice])
 
 def _sum_matching_faces(dice: List[Die], face_value: int) -> int:
-    """Sums all the showing faces which match a given value for a set of dice."""
+    """Sums all the showing faces which match a given value, for a set of dice."""
     matching_dice = _find_matching_dice(dice=dice, face_value=face_value)
     return _sum_all_showing_faces(dice=matching_dice)
