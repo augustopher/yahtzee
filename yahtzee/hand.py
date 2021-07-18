@@ -2,9 +2,15 @@ from .dice import Die
 
 from typing import List, Optional
 
+
 class Hand:
     """Representation of the player's hand."""
-    def __init__(self, dice: Optional[List[Die]] = None, num_dice: int = 5, dice_sides: int = 6):
+    def __init__(
+        self,
+        dice: Optional[List[Die]] = None,
+        num_dice: int = 5,
+        dice_sides: int = 6
+    ):
         self.dice = dice if dice else self._create_dice(num=num_dice, sides=dice_sides)
 
     def _create_dice(self, num: int, sides: int) -> List[Die]:

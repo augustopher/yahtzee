@@ -3,7 +3,7 @@ from setuptools import setup
 install_requires = ["tabulate"]
 test_requires = ["pytest", "pytest-mock"]
 docs_requires = []
-typecheck_requires = ["mypy"]
+typecheck_requires = ["mypy", "types-tabulate"]
 lint_requires = ["flake8"]
 
 setup(

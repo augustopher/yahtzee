@@ -1,8 +1,10 @@
 import random
-from typing import Optional
+from typing import Optional, List
+
 
 class IllegalDieValueError(ValueError):
     pass
+
 
 class Die:
     """Representation of a n-sided die."""
@@ -25,3 +27,6 @@ class Die:
     def _roll_die(self) -> int:
         """Returns the value resulting from a die roll."""
         return random.choice(self.faces)
+
+
+DiceList = List[Optional[Die]]

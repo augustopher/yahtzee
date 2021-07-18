@@ -11,6 +11,7 @@ from yahtzee.dice import Die
 
 import pytest
 
+
 def test_scoresheet_init_valid_rules():
     """Check that scoresheets are initialized properly with valid arguments."""
     rules = [
@@ -21,6 +22,7 @@ def test_scoresheet_init_valid_rules():
     assert len(result.rules) == 2
     assert all([score is None for score in result.scores.values()])
 
+
 def test_scoresheet_init_dupe_rules_error():
     """Check that duplicate rule names raise the appropriate error."""
     rules = [
@@ -28,7 +30,8 @@ def test_scoresheet_init_dupe_rules_error():
         FullHouseScoringRule(name="rule")
     ]
     with pytest.raises(DuplicateRuleNamesError, match=r"Rules cannot.*"):
-        result = Scoresheet(rules=rules)
+        Scoresheet(rules=rules)
+
 
 def test_get_name_from_index():
     """Checks that the correct rule name is retrieved by index."""
@@ -40,6 +43,7 @@ def test_get_name_from_index():
     result = sheet._get_name_from_index(index=1)
     assert result == rules[0].name
 
+
 def test_get_rule_from_name():
     """Checks that the correct rule is retrieved by name."""
     rules = [
@@ -50,7 +54,8 @@ def test_get_rule_from_name():
     result = sheet._get_rule_from_name(name="rule2")
     assert result == rules[1]
 
-@pytest.mark.parametrize("score_rule, expected",[
+
+@pytest.mark.parametrize("score_rule, expected", [
     ("rule1", False),
     ("rule2", True),
 ])
@@ -64,6 +69,7 @@ def test_check_rule_not_scored(score_rule, expected):
     sheet.scores[score_rule] = 1
     result = sheet._check_rule_not_scored(name="rule1")
     assert result is expected
+
 
 def test_update_rule_score():
     """Check that a rule's score is updated properly from a requested name."""
@@ -86,6 +92,7 @@ def test_update_rule_score():
         score == expected_scores[rule] for rule, score in sheet.scores.items()
     ])
 
+
 def test_update_rule_score_error():
     """Check that scoring a previously-scored rule raises
     the appropriate error."""
@@ -100,6 +107,7 @@ def test_update_rule_score_error():
     sheet.update_rule_score(name="rule1", dice=dice)
     with pytest.raises(RuleAlreadyScoredError, match=r"Rule.*"):
         sheet.update_rule_score(name="rule1", dice=dice)
+
 
 def test_update_score():
     """Check that a rule's score is updated properly from a requested index."""

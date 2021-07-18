@@ -1,7 +1,7 @@
-from .dice import Die
-from .hand import Hand
-from .scoring.scoreboard import Scoresheet
-import .scoring.rules as rules
+# from .dice import Die
+# from .hand import Hand
+# from .scoring.scoresheet import Scoresheet
+from .scoring import rules as rules
 
 DEFAULT_RULES = [
     rules.MultiplesScoringRule(name="Aces (Ones)", face_value=1),
