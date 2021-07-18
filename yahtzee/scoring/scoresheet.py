@@ -1,8 +1,8 @@
-from ..dice import Die
+from ..dice import Die, DiceList
 from .rules import ScoringRule, Section
 from .validators import _find_duplicates
 
-from typing import List, Union
+from typing import List, Union, Dict, Optional, Any
 
 from tabulate import tabulate
 
@@ -17,7 +17,7 @@ class Scoresheet():
     def __init__(self, rules: List[ScoringRule]):
         self._validate_rule_names(rules)
         self.rules = rules
-        self.scores = {rule.name: None for rule in rules}
+        self.scores: Dict[str, Optional[int]] = {rule.name: None for rule in rules}
         self.rules_map = {idx + 1: rule.name for idx, rule in enumerate(rules)}
 
     def _validate_rule_names(self, rules: List[ScoringRule]) -> None:
@@ -31,14 +31,14 @@ class Scoresheet():
             )
         return None
 
-    def update_score(self, index: int, dice: List[Die]) -> None:
+    def update_score(self, index: int, dice: DiceList) -> None:
         """Updates the score for a rule, chosen by user input,
         based on the given dice."""
         rule_name = self._get_name_from_index(index=index)
         self.update_rule_score(name=rule_name, dice=dice)
         return None
 
-    def update_rule_score(self, name: str, dice: List[Die]) -> None:
+    def update_rule_score(self, name: str, dice: DiceList) -> None:
         """Updates the score for a given rule, based on the given dice."""
         if not self._check_rule_not_scored(name=name):
             raise RuleAlreadyScoredError(
@@ -72,13 +72,13 @@ class Scoresheet():
         section_header = [f"{section.name} Section".title()]
         return section_header
 
-    def _generate_score_row(self, name: str) -> List[Union[str, int, None]]:
+    def _generate_score_row(self, name: str) -> List[Any]:
         """Assembles the row corresponding to the given rule."""
-        index = [idx for idx, nm in self.rules_map.items() if nm == name][0]
+        index = next(idx for idx, nm in self.rules_map.items() if nm == name)
         row = [index, name, self.scores[name]]
         return row
 
-    def _generate_section(self, section: Section) -> List[List[Union[str, int, None]]]:
+    def _generate_section(self, section: Section) -> List[List[Any]]:
         """Assembles a given section of the scoresheet."""
         section_header = self._generate_section_header(section=section)
         scores_header = self._generate_scores_header()
@@ -86,7 +86,7 @@ class Scoresheet():
         scores_rows = [self._generate_score_row(rule.name) for rule in section_rules]
         return [section_header] + [scores_header] + scores_rows
 
-    def _generate_scoresheet(self) -> List[List[Union[str, int, None]]]:
+    def _generate_scoresheet(self) -> List[List[Any]]:
         """Assembles the entire scoresheet."""
         upper_section = self._generate_section(section=Section.UPPER)
         lower_section = self._generate_section(section=Section.LOWER)
