@@ -35,7 +35,7 @@ class ScoringRule(ABC):
     @abstractmethod
     def score(self, dice: DiceList) -> int:
         """Method to score a given set of dice."""
-        pass
+        pass #pragma: no cover
 
 
 class PatternConstantScoringRule(ScoringRule):
@@ -56,7 +56,7 @@ class PatternConstantScoringRule(ScoringRule):
     def validate(self, dice: DiceList) -> bool:
         """Method to check that the desired pattern
         is present in the given dice."""
-        pass
+        pass #pragma: no cover
 
 
 class PatternVariableScoringRule(ScoringRule):
@@ -75,13 +75,13 @@ class PatternVariableScoringRule(ScoringRule):
     @abstractmethod
     def _scoring_func(self, dice: DiceList) -> int:
         """Method for calculating a dice-dependent score."""
-        pass
+        pass #pragma: no cover
 
     @abstractmethod
     def validate(self, dice: DiceList) -> bool:
         """Method to check that the desired pattern
         is present in the given dice."""
-        pass
+        pass #pragma: no cover
 
 
 class ChanceScoringRule(PatternVariableScoringRule):
@@ -227,7 +227,7 @@ class BonusRule(ABC):
 
     def score(self, count: int) -> int:
         """Method to score a bonus rule."""
-        pass
+        pass #pragma: no cover
 
 
 class ThresholdBonusRule(BonusRule):
