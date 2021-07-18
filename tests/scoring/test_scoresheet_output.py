@@ -2,6 +2,7 @@ from yahtzee.scoring.scoresheet import Scoresheet
 from yahtzee.scoring.rules import (
     ChanceScoringRule,
     FullHouseScoringRule,
+    CountBonusRule,
     Section,
 )
 
@@ -10,7 +11,7 @@ import pytest
 
 def test_scoresheet_scores_header():
     """Checks that the score header is assembled correctly."""
-    sheet = Scoresheet(rules=[ChanceScoringRule(name="rule")])
+    sheet = Scoresheet(rules=[ChanceScoringRule(name="rule")], bonuses=[CountBonusRule(name="bonus1")])
     result = sheet._generate_scores_header()
     expected = ["Rule", "Name", "Scored"]
     assert result == expected
@@ -22,7 +23,10 @@ def test_scoresheet_scores_header():
 ])
 def test_scoresheet_section_header(section, expected):
     """Checks that the section header is assembled correctly."""
-    sheet = Scoresheet(rules=[ChanceScoringRule(name="rule")])
+    sheet = Scoresheet(
+        rules=[ChanceScoringRule(name="rule")],
+        bonuses=[CountBonusRule(name="bonus1")]
+    )
     result = sheet._generate_section_header(section=section)
     assert result == expected
 
@@ -33,7 +37,8 @@ def test_scoresheet_score_row():
         ChanceScoringRule(name="rule1"),
         FullHouseScoringRule(name="rule2"),
     ]
-    sheet = Scoresheet(rules=rules)
+    bonuses = [CountBonusRule(name="bonus1")]
+    sheet = Scoresheet(rules=rules, bonuses=bonuses)
     results = [sheet._generate_score_row(rule.name) for rule in rules]
     expected = [[1, "rule1", None], [2, "rule2", None]]
     assert results == expected
@@ -59,7 +64,8 @@ def test_scoresheet_section(section, expected):
         ChanceScoringRule(name="rule2", section=Section.LOWER),
         ChanceScoringRule(name="rule3", section=Section.LOWER),
     ]
-    sheet = Scoresheet(rules=rules)
+    bonuses = [CountBonusRule(name="bonus1")]
+    sheet = Scoresheet(rules=rules, bonuses=bonuses)
     result = sheet._generate_section(section=section)
     assert result == expected
 
@@ -71,7 +77,8 @@ def test_scoresheet_scoresheet():
         ChanceScoringRule(name="rule2", section=Section.LOWER),
         ChanceScoringRule(name="rule3", section=Section.LOWER),
     ]
-    sheet = Scoresheet(rules=rules)
+    bonuses = [CountBonusRule(name="bonus1")]
+    sheet = Scoresheet(rules=rules, bonuses=bonuses)
     result = sheet._generate_scoresheet()
     expected = [
         ["Upper Section"],
@@ -92,7 +99,8 @@ def test_scoresheet_output():
         ChanceScoringRule(name="rule2", section=Section.LOWER),
         ChanceScoringRule(name="rule3", section=Section.LOWER),
     ]
-    sheet = Scoresheet(rules=rules)
+    bonuses = [CountBonusRule(name="bonus1")]
+    sheet = Scoresheet(rules=rules, bonuses=bonuses)
     result = sheet.output()
     expected = (
         "-------------  -----  ------\nUpper Section\nRule           "

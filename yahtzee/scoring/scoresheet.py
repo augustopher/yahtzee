@@ -1,8 +1,8 @@
 from ..dice import DiceList
-from .rules import ScoringRule, Section
+from .rules import ScoringRule, BonusRule, Section
 from .validators import _find_duplicates
 
-from typing import List, Dict, Optional, Any
+from typing import List, Dict, Optional, Any, Union
 
 from tabulate import tabulate
 
@@ -17,13 +17,18 @@ class RuleAlreadyScoredError(ValueError):
 
 class Scoresheet():
     """Representation of a scoring sheet."""
-    def __init__(self, rules: List[ScoringRule]):
+    def __init__(self, rules: List[ScoringRule], bonuses: List[BonusRule]):
         self._validate_rule_names(rules)
+        self._validate_rule_names(bonuses)
         self.rules = rules
         self.scores: Dict[str, Optional[int]] = {rule.name: None for rule in rules}
         self.rules_map = {idx + 1: rule.name for idx, rule in enumerate(rules)}
+        self.bonuses = bonuses
+        self.bonus_scores: Dict[str, Optional[int]] = {
+            rule.name: None for rule in bonuses
+        }
 
-    def _validate_rule_names(self, rules: List[ScoringRule]) -> None:
+    def _validate_rule_names(self, rules: List[Union[ScoringRule, BonusRule]]) -> None:
         """Check that all rule names are unique."""
         rule_names = [rule.name for rule in rules]
         duplicate_names = _find_duplicates(rule_names)
@@ -62,6 +67,11 @@ class Scoresheet():
     def _check_rule_not_scored(self, name: str) -> bool:
         """Checks that a rule is not already scored."""
         return self.scores[name] is None
+
+    def _get_section_subtotal_score(self, section: Section) -> int:
+        """Calculates the total score for a section, before bonuses."""
+        section_rules = [rule.name for rule in self.rules if rule.section == section]
+        return sum([self.scores[rule] for rule in section_rules if self.scores[rule]])
 
     @staticmethod
     def _generate_scores_header() -> List[str]:
