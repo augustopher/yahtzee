@@ -122,3 +122,27 @@ def test_sum_matching_faces(seq, face, expected):
     dice = [Die(starting_face=s) for s in seq]
     result = rules._sum_matching_faces(dice=dice, face_value=face)
     assert result == expected
+
+
+@pytest.mark.parametrize("count, threshold, bonus, expected", [
+    (5, 10, 20, 0),
+    (10, 10, 20, 20),
+    (15, 10, 20, 20),
+])
+def test_score_threshold_bonus_rule(count, threshold, bonus, expected):
+    """Check that threshold-based bonus rules score correctly."""
+    rule = rules.ThresholdBonusRule(name="name", threshold=threshold, bonus_value=bonus)
+    result = rule.score(count=count)
+    assert result == expected
+
+
+@pytest.mark.parametrize("count, bonus, expected", [
+    (0, 5, 0),
+    (1, 5, 5),
+    (20, 5, 100),
+])
+def test_score_count_bonus_rule(count, bonus, expected):
+    """Check that count-based bonus rules are scored correctly."""
+    rule = rules.CountBonusRule(name="name", bonus_value=bonus)
+    result = rule.score(count=count)
+    assert result == expected
