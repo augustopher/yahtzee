@@ -19,4 +19,9 @@ DEFAULT_RULES = [
     rules.ChanceScoringRule(name="Chance"),
 ]
 
+DEFAULT_BONUSES = [
+    rules.ThresholdBonusRule(name="Upper Section Bonus"),
+    rules.CountBonusRule(name="Yahtzee Bonus")
+]
+
 DEFAULT_DICE = [Die(sides=6) for _ in range(5)]

@@ -16,6 +16,10 @@ SCORE_SMALL_STRAIGHT: int = 30
 SCORE_LARGE_STRAIGHT: int = 40
 SCORE_YAHTZEE: int = 50
 
+BONUS_UPPER_SCORE = 35
+BONUS_UPPER_THRESHOLD = 63
+BONUS_LOWER_SCORE = 100
+
 
 class Section(Enum):
     UPPER: str = "upper"
@@ -212,3 +216,50 @@ def _sum_matching_faces(dice: DiceList, face_value: int) -> int:
     """Sums all the showing faces which match a given value, for a set of dice."""
     matching_dice = _find_matching_dice(dice=dice, face_value=face_value)
     return _sum_all_showing_faces(dice=matching_dice)
+
+
+class BonusRule(ABC):
+    """Generic rule for scoring a bonus."""
+    def __init__(self, name: str, section: Section, bonus_value: int):
+        self.name = name
+        self.section = section
+        self.bonus_value = bonus_value
+
+    def score(self, count: int) -> int:
+        """Method to score a bonus rule."""
+        pass
+
+
+class ThresholdBonusRule(BonusRule):
+    """Rule for a bonus of which gives points for exceeding a threshold."""
+    def __init__(
+        self,
+        name: str,
+        section: Section = Section.UPPER,
+        threshold: int = BONUS_UPPER_THRESHOLD,
+        bonus_value: int = BONUS_UPPER_SCORE
+    ):
+        super().__init__(name=name, section=section, bonus_value=bonus_value)
+        self.threshold = threshold
+
+    def score(self, count: int) -> int:
+        """Method to score a threshold bonus rule."""
+        if count >= self.threshold:
+            return self.bonus_value
+        else:
+            return 0
+
+
+class CountBonusRule(BonusRule):
+    """Rule for a bonus which gives a point value per a count of something."""
+    def __init__(
+        self,
+        name: str,
+        section: Section = Section.LOWER,
+        bonus_value: int = BONUS_LOWER_SCORE
+    ):
+        super().__init__(name=name, section=section, bonus_value=bonus_value)
+
+    def score(self, count: int) -> int:
+        """Method to score a count-based bonus."""
+        return count * self.bonus_value
