@@ -1,4 +1,4 @@
-# from .dice import Die
+from .dice import Die
 # from .hand import Hand
 # from .scoring.scoresheet import Scoresheet
 from .scoring import rules as rules
@@ -18,3 +18,5 @@ DEFAULT_RULES = [
     rules.YahtzeeScoringRule(name="YAHTZEE"),
     rules.ChanceScoringRule(name="Chance"),
 ]
+
+DEFAULT_DICE = [Die(sides=6) for _ in range(5)]

@@ -5,6 +5,10 @@ from collections import Counter
 from typing import List
 
 
+class RuleInputValueError(ValueError):
+    pass
+
+
 def _find_matching_dice(dice: DiceList, face_value: int) -> DiceList:
     """Helper to find dice with the expected face value."""
     matching_dice: DiceList = [
@@ -21,11 +25,16 @@ def _validate_nofkind(dice: DiceList, n: int) -> bool:
     return n in counts.values()
 
 
-def _validate_full_house(dice: DiceList) -> bool:
-    """Helper to check for a full house (pair and triple)."""
-    pair = _validate_nofkind(dice=dice, n=2)
-    triple = _validate_nofkind(dice=dice, n=3)
-    return pair and triple
+def _validate_full_house(dice: DiceList, large_n: int, small_n: int) -> bool:
+    """Helper to check for a full house (2 n-of-a-kind, large_n > small_n)."""
+    if small_n >= large_n:
+        raise RuleInputValueError(
+            f"A full house requires `large_n` > `small_n`. "
+            f"Received large_n {large_n}, small_n {small_n}."
+        )
+    small_nkind = _validate_nofkind(dice=dice, n=small_n)
+    large_nkind = _validate_nofkind(dice=dice, n=large_n)
+    return small_nkind and large_nkind
 
 
 def _validate_straight(values: List[int]) -> bool:

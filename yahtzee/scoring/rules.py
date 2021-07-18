@@ -151,18 +151,26 @@ class YahtzeeScoringRule(PatternConstantScoringRule):
 
 
 class FullHouseScoringRule(PatternConstantScoringRule):
-    """Rules which look for a full house (3-of-a-kind and 2-of-a-kind)."""
+    """Rules which look for a full house (N1-of-a-kind and N2-of-a-kind, N1 > N2)."""
     def __init__(
         self,
         name: str,
         section: Section = Section.LOWER,
+        large_n: int = 3,
+        small_n: int = 2,
         score_value: int = SCORE_FULL_HOUSE
     ):
         super().__init__(name=name, section=section, score_value=score_value)
+        self.large_n = large_n
+        self.small_n = small_n
 
     def validate(self, dice: DiceList) -> bool:
         """Method to check that a full house is present in the given dice."""
-        return _validate_full_house(dice=dice)
+        return _validate_full_house(
+            dice=dice,
+            large_n=self.large_n,
+            small_n=self.small_n
+        )
 
 
 class LargeStraightScoringRule(PatternConstantScoringRule):

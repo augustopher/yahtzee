@@ -72,17 +72,24 @@ def test_validate_nofkind(seq, n, expected):
     assert result is expected
 
 
-@pytest.mark.parametrize("seq, expected", [
-    ([1, 1, 6, 6, 6], True),
-    ([1, 2, 3, 4, 5], False),
-    ([1, 1, 3, 4, 5], False),
-    ([1, 1, 1, 4, 5], False),
+@pytest.mark.parametrize("seq, n1, n2, expected", [
+    ([1, 1, 6, 6, 6], 3, 2, True),
+    ([1, 2, 3, 4, 5], 3, 2, False),
+    ([1, 1, 3, 4, 5], 3, 2, False),
+    ([1, 1, 1, 4, 5], 3, 2, False),
+    ([1, 1, 1, 6, 6, 6, 6], 4, 3, True),
 ])
-def test_validate_full_house(seq, expected):
+def test_validate_full_house(seq, n1, n2, expected):
     """Check that full houses are properly identified."""
     dice = [Die(starting_face=s) for s in seq]
-    result = valid._validate_full_house(dice=dice)
+    result = valid._validate_full_house(dice=dice, large_n=n1, small_n=n2)
     assert result is expected
+
+
+def test_validate_full_house_error():
+    """Check that invalid n values raise the appropriate error."""
+    with pytest.raises(valid.RuleInputValueError, match=r"A full house.*"):
+        valid._validate_full_house(dice=[Die()], large_n=2, small_n=3)
 
 
 @pytest.mark.parametrize("vals, expected", [
