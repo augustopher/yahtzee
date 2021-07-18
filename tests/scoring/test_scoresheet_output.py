@@ -1,15 +1,12 @@
-from yahtzee.scoring.scoresheet import (
-    Scoresheet,
-    DuplicateRuleNamesError,
-)
+from yahtzee.scoring.scoresheet import Scoresheet
 from yahtzee.scoring.rules import (
     ChanceScoringRule,
     FullHouseScoringRule,
     Section,
 )
-from yahtzee.dice import Die
 
 import pytest
+
 
 def test_scoresheet_scores_header():
     """Checks that the score header is assembled correctly."""
@@ -18,7 +15,8 @@ def test_scoresheet_scores_header():
     expected = ["Rule", "Name", "Scored"]
     assert result == expected
 
-@pytest.mark.parametrize("section, expected",[
+
+@pytest.mark.parametrize("section, expected", [
     (Section.UPPER, ["Upper Section"]),
     (Section.LOWER, ["Lower Section"]),
 ])
@@ -27,6 +25,7 @@ def test_scoresheet_section_header(section, expected):
     sheet = Scoresheet(rules=[ChanceScoringRule(name="rule")])
     result = sheet._generate_section_header(section=section)
     assert result == expected
+
 
 def test_scoresheet_score_row():
     """Checks that a given row is assembled correctly."""
@@ -38,6 +37,7 @@ def test_scoresheet_score_row():
     results = [sheet._generate_score_row(rule.name) for rule in rules]
     expected = [[1, "rule1", None], [2, "rule2", None]]
     assert results == expected
+
 
 @pytest.mark.parametrize("section, expected", [
     (Section.UPPER, [
@@ -63,6 +63,7 @@ def test_scoresheet_section(section, expected):
     result = sheet._generate_section(section=section)
     assert result == expected
 
+
 def test_scoresheet_scoresheet():
     """Check that the entire scoresheet is assembled correctly."""
     rules = [
@@ -83,6 +84,7 @@ def test_scoresheet_scoresheet():
     ]
     assert result == expected
 
+
 def test_scoresheet_output():
     """Check that the entire scoresheet is output correctly."""
     rules = [
@@ -92,5 +94,10 @@ def test_scoresheet_output():
     ]
     sheet = Scoresheet(rules=rules)
     result = sheet.output()
-    expected = "-------------  -----  ------\nUpper Section\nRule           Name   Scored\n1              rule1\nLower Section\nRule           Name   Scored\n2              rule2\n3              rule3\n-------------  -----  ------"
+    expected = (
+        "-------------  -----  ------\nUpper Section\nRule           "
+        "Name   Scored\n1              rule1\nLower Section\nRule           Name   "
+        "Scored\n2              rule2\n3              rule3\n-------------  -----  "
+        "------"
+    )
     assert result == expected
