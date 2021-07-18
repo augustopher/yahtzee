@@ -1,8 +1,8 @@
 from ..dice import DiceList
-from .rules import ScoringRule, BonusRule, Section
+from .rules import ScoringRule, BonusRule, Section, AllRulesListsType
 from .validators import _find_duplicates
 
-from typing import List, Dict, Optional, Any, Union
+from typing import List, Dict, Optional, Any
 
 from tabulate import tabulate
 
@@ -28,7 +28,7 @@ class Scoresheet():
             rule.name: None for rule in bonuses
         }
 
-    def _validate_rule_names(self, rules: List[Union[ScoringRule, BonusRule]]) -> None:
+    def _validate_rule_names(self, rules: AllRulesListsType) -> None:
         """Check that all rule names are unique."""
         rule_names = [rule.name for rule in rules]
         duplicate_names = _find_duplicates(rule_names)
@@ -71,7 +71,8 @@ class Scoresheet():
     def _get_section_subtotal_score(self, section: Section) -> int:
         """Calculates the total score for a section, before bonuses."""
         section_rules = [rule.name for rule in self.rules if rule.section == section]
-        return sum([self.scores[rule] for rule in section_rules if self.scores[rule]])
+        section_scores = [self.scores[rule] for rule in section_rules]
+        return sum([s for s in section_scores if s])
 
     @staticmethod
     def _generate_scores_header() -> List[str]:

@@ -30,10 +30,14 @@ def test_scoresheet_init_valid_rules():
 
 
 @pytest.mark.parametrize("rules, bonuses", [
-    ([ChanceScoringRule(name="rule"), FullHouseScoringRule(name="rule")],
-    [CountBonusRule(name="bonus")]),
-    ([ChanceScoringRule(name="rule")],
-    [CountBonusRule(name="bonus"), ThresholdBonusRule(name="bonus")]),
+    (
+        [ChanceScoringRule(name="rule"), FullHouseScoringRule(name="rule")],
+        [CountBonusRule(name="bonus")]
+    ),
+    (
+        [ChanceScoringRule(name="rule")],
+        [CountBonusRule(name="bonus"), ThresholdBonusRule(name="bonus")]
+    ),
 ])
 def test_scoresheet_init_dupe_rules_error(rules, bonuses):
     """Check that duplicate rule names raise the appropriate error."""

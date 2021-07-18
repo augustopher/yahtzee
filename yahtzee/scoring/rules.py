@@ -9,6 +9,7 @@ from .validators import (
 
 from abc import ABC, abstractmethod
 from enum import Enum
+from typing import Union, List
 
 # scores that are constant, regardless of dice values
 SCORE_FULL_HOUSE: int = 25
@@ -225,6 +226,7 @@ class BonusRule(ABC):
         self.section = section
         self.bonus_value = bonus_value
 
+    @abstractmethod
     def score(self, count: int) -> int:
         """Method to score a bonus rule."""
         pass  # pragma: no cover
@@ -263,3 +265,6 @@ class CountBonusRule(BonusRule):
     def score(self, count: int) -> int:
         """Method to score a count-based bonus."""
         return count * self.bonus_value
+
+
+AllRulesListsType = Union[List[ScoringRule], List[BonusRule]]

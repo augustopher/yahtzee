@@ -11,7 +11,10 @@ import pytest
 
 def test_scoresheet_scores_header():
     """Checks that the score header is assembled correctly."""
-    sheet = Scoresheet(rules=[ChanceScoringRule(name="rule")], bonuses=[CountBonusRule(name="bonus1")])
+    sheet = Scoresheet(
+        rules=[ChanceScoringRule(name="rule")],
+        bonuses=[CountBonusRule(name="bonus1")]
+    )
     result = sheet._generate_scores_header()
     expected = ["Rule", "Name", "Scored"]
     assert result == expected
