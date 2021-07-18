@@ -1,12 +1,21 @@
 #!/bin/bash
 
+usage() {
+	echo "usage: ./run_scripts.sh -options"
+	echo "-a  Run all checks"
+	echo "-l  Run lint check (flake8)"
+	echo "-m  Run type check (mypy)"
+	echo "-t  Run tests (pytest)"
+	echo "-h  Brings up this message"
+}
+
 OPTIND=1
 
 RUN_LINT=0
 RUN_TYPE=0
 RUN_TEST=0
 
-while getopts "almt" opt; do
+while getopts "almth" opt; do
   case "$opt" in
     a)
       RUN_LINT=1
@@ -22,6 +31,13 @@ while getopts "almt" opt; do
     t)
       RUN_TEST=1
       ;;
+		h)
+			usage
+			;;
+		*)
+			usage
+			exit 1
+			;;
   esac
 done
 
