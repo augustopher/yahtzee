@@ -1,8 +1,8 @@
 from ..dice import DiceList
-from .rules import ScoringRule, BonusRule, Section, AllRulesListsType
+from .rules import ScoringRule, BonusRule, Section
 from .validators import _find_duplicates
 
-from typing import List, Dict, Optional, Any
+from typing import List, Dict, Optional, Any, Union
 
 from tabulate import tabulate
 
@@ -28,7 +28,10 @@ class Scoresheet():
             rule.name: None for rule in bonuses
         }
 
-    def _validate_rule_names(self, rules: AllRulesListsType) -> None:
+    def _validate_rule_names(
+        self,
+        rules: Union[List[ScoringRule], List[BonusRule]]
+    ) -> None:
         """Check that all rule names are unique."""
         rule_names = [rule.name for rule in rules]
         duplicate_names = _find_duplicates(rule_names)
