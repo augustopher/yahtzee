@@ -1,6 +1,6 @@
-from .dice import Die
-from .hand import Hand
-from .scoring.scoresheet import Scoresheet
+# from .dice import Die
+# from .hand import Hand
+# from .scoring.scoresheet import Scoresheet
 from .scoring import rules as rules
 
 DEFAULT_RULES = [

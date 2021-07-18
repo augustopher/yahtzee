@@ -1,16 +1,19 @@
-from ..dice import Die, DiceList
+from ..dice import DiceList
 from .rules import ScoringRule, Section
 from .validators import _find_duplicates
 
-from typing import List, Union, Dict, Optional, Any
+from typing import List, Dict, Optional, Any
 
 from tabulate import tabulate
+
 
 class DuplicateRuleNamesError(ValueError):
     pass
 
+
 class RuleAlreadyScoredError(ValueError):
     pass
+
 
 class Scoresheet():
     """Representation of a scoring sheet."""
