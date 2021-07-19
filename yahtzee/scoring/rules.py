@@ -9,6 +9,8 @@ from .validators import (
 
 from abc import ABC, abstractmethod
 from enum import Enum
+from typing import Optional
+from dataclasses import dataclass
 
 # scores that are constant, regardless of dice values
 SCORE_FULL_HOUSE: int = 25
@@ -218,12 +220,35 @@ def _sum_matching_faces(dice: DiceList, face_value: int) -> int:
     return _sum_all_showing_faces(dice=matching_dice)
 
 
+@dataclass
+class BonusCounter:
+    """Counter for a bonus rule."""
+    count: int = 0
+
+    def increment(self, amt: int = 1) -> None:
+        """Increment the stored count."""
+        self.count += amt
+        return None
+
+
 class BonusRule(ABC):
     """Generic rule for scoring a bonus."""
-    def __init__(self, name: str, section: Section, bonus_value: int):
+    def __init__(
+        self,
+        name: str,
+        section: Section,
+        bonus_value: int,
+        counter: Optional[BonusCounter] = None
+    ):
         self.name = name
         self.section = section
         self.bonus_value = bonus_value
+        self.counter = counter if counter else BonusCounter()
+
+    def increment(self, amt: int = 1) -> None:
+        """Method to increment the internal counter."""
+        self.counter.increment(amt=amt)
+        return None
 
     @abstractmethod
     def score(self, count: int) -> int:
@@ -238,9 +263,15 @@ class ThresholdBonusRule(BonusRule):
         name: str,
         section: Section = Section.UPPER,
         threshold: int = BONUS_UPPER_THRESHOLD,
-        bonus_value: int = BONUS_UPPER_SCORE
+        bonus_value: int = BONUS_UPPER_SCORE,
+        counter: Optional[BonusCounter] = None
     ):
-        super().__init__(name=name, section=section, bonus_value=bonus_value)
+        super().__init__(
+            name=name,
+            section=section,
+            bonus_value=bonus_value,
+            counter=counter
+        )
         self.threshold = threshold
 
     def score(self, count: int) -> int:
@@ -257,9 +288,15 @@ class CountBonusRule(BonusRule):
         self,
         name: str,
         section: Section = Section.LOWER,
-        bonus_value: int = BONUS_LOWER_SCORE
+        bonus_value: int = BONUS_LOWER_SCORE,
+        counter: Optional[BonusCounter] = None
     ):
-        super().__init__(name=name, section=section, bonus_value=bonus_value)
+        super().__init__(
+            name=name,
+            section=section,
+            bonus_value=bonus_value,
+            counter=counter
+        )
 
     def score(self, count: int) -> int:
         """Method to score a count-based bonus."""

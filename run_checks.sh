@@ -41,6 +41,11 @@ while getopts "almth" opt; do
   esac
 done
 
+RUN_SOMETHING=$((RUN_LINT + RUN_TYPE + RUN_TEST))
+if [ $RUN_SOMETHING -eq 0 ]; then
+	echo "No checks selected, no checks run."
+fi
+
 if [ $RUN_LINT -gt 0 ]; then
 	echo "Lint check with flake8..."
 	flake8 yahtzee tests
@@ -62,7 +67,7 @@ fi
 
 if [ $RUN_TEST -gt 0 ]; then
 	echo "Run tests with pytest..."
-	pytest tests
+	pytest
 	if [ $? -ne 0 ]; then
 		exit 1
 	fi
