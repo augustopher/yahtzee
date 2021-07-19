@@ -1,8 +1,8 @@
 from ..dice import DiceList
-from .rules import ScoringRule, BonusRule, Section
+from .rules import ScoringRule, BonusRule, Section, YahtzeeBonusRule
 from .validators import _find_duplicates
 
-from typing import List, Any, Union
+from typing import List, Any
 
 from tabulate import tabulate
 
@@ -11,22 +11,35 @@ class DuplicateRuleNamesError(ValueError):
     pass
 
 
-class Scoresheet():
+class Scoresheet:
     """Representation of a scoring sheet."""
-    def __init__(self, rules: List[ScoringRule], bonuses: List[BonusRule]):
-        self._validate_rule_names(rules)
-        self._validate_rule_names(bonuses)
+    def __init__(
+        self,
+        rules: List[ScoringRule],
+        bonuses: List[BonusRule],
+        yahtzee_bonus: YahtzeeBonusRule
+    ):
+        self._validate_rule_names(
+            rules=rules,
+            bonuses=bonuses,
+            yahtzee_bonus=yahtzee_bonus
+        )
         self.rules = rules
         self.rules_map = {idx + 1: rule.name for idx, rule in enumerate(rules)}
         self.bonuses = bonuses
+        self.yahtzee_bonus = yahtzee_bonus
 
     def _validate_rule_names(
         self,
-        rules: Union[List[ScoringRule], List[BonusRule]]
+        rules: List[ScoringRule],
+        bonuses: List[BonusRule],
+        yahtzee_bonus: YahtzeeBonusRule
     ) -> None:
         """Check that all rule names are unique."""
         rule_names = [rule.name for rule in rules]
-        duplicate_names = _find_duplicates(rule_names)
+        bonus_names = [bonus.name for bonus in bonuses]
+        all_names = rule_names + bonus_names + [yahtzee_bonus.name]
+        duplicate_names = _find_duplicates(all_names)
         if duplicate_names:
             raise DuplicateRuleNamesError(
                 f"Rules cannot share names. Duplicate names are: "

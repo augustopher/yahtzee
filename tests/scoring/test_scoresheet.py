@@ -2,13 +2,7 @@ from yahtzee.scoring.scoresheet import (
     Scoresheet,
     DuplicateRuleNamesError,
 )
-from yahtzee.scoring.rules import (
-    ChanceScoringRule,
-    FullHouseScoringRule,
-    ThresholdBonusRule,
-    CountBonusRule,
-    Section
-)
+import yahtzee.scoring.rules as rl
 from yahtzee.dice import Die
 
 import pytest
@@ -17,39 +11,45 @@ import pytest
 def test_scoresheet_init_valid_rules():
     """Check that scoresheets are initialized properly with valid arguments."""
     rules = [
-        ChanceScoringRule(name="rule1"),
-        ChanceScoringRule(name="rule2"),
+        rl.ChanceScoringRule(name="rule1"),
+        rl.ChanceScoringRule(name="rule2"),
     ]
-    bonuses = [CountBonusRule(name="bonus1")]
-    result = Scoresheet(rules=rules, bonuses=bonuses)
+    bonuses = [rl.CountBonusRule(name="bonus1")]
+    yahtzee_bonus = rl.YahtzeeBonusRule(name="yahtzee")
+    result = Scoresheet(rules=rules, bonuses=bonuses, yahtzee_bonus=yahtzee_bonus)
     assert len(result.rules) == 2
     assert len(result.bonuses) == 1
 
 
 @pytest.mark.parametrize("rules, bonuses", [
     (
-        [ChanceScoringRule(name="rule"), FullHouseScoringRule(name="rule")],
-        [CountBonusRule(name="bonus")]
+        [rl.ChanceScoringRule(name="rule"), rl.FullHouseScoringRule(name="rule")],
+        [rl.CountBonusRule(name="bonus")]
     ),
     (
-        [ChanceScoringRule(name="rule")],
-        [CountBonusRule(name="bonus"), ThresholdBonusRule(name="bonus")]
+        [rl.ChanceScoringRule(name="rule")],
+        [rl.CountBonusRule(name="bonus"), rl.ThresholdBonusRule(name="bonus")]
     ),
 ])
 def test_scoresheet_init_dupe_rules_error(rules, bonuses):
     """Check that duplicate rule names raise the appropriate error."""
     with pytest.raises(DuplicateRuleNamesError, match=r"Rules cannot.*"):
-        Scoresheet(rules=rules, bonuses=bonuses)
+        Scoresheet(
+            rules=rules,
+            bonuses=bonuses,
+            yahtzee_bonus=rl.YahtzeeBonusRule(name="yahtzee")
+        )
 
 
 def test_get_name_from_index():
     """Checks that the correct rule name is retrieved by index."""
     rules = [
-        ChanceScoringRule(name="rule1"),
-        ChanceScoringRule(name="rule2"),
+        rl.ChanceScoringRule(name="rule1"),
+        rl.ChanceScoringRule(name="rule2"),
     ]
-    bonuses = [CountBonusRule(name="bonus1")]
-    sheet = Scoresheet(rules=rules, bonuses=bonuses)
+    bonuses = [rl.CountBonusRule(name="bonus1")]
+    yahtzee_bonus = rl.YahtzeeBonusRule(name="yahtzee")
+    sheet = Scoresheet(rules=rules, bonuses=bonuses, yahtzee_bonus=yahtzee_bonus)
     result = sheet._get_name_from_index(index=1)
     assert result == rules[0].name
 
@@ -57,11 +57,12 @@ def test_get_name_from_index():
 def test_get_rule_from_name():
     """Checks that the correct rule is retrieved by name."""
     rules = [
-        ChanceScoringRule(name="rule1"),
-        ChanceScoringRule(name="rule2"),
+        rl.ChanceScoringRule(name="rule1"),
+        rl.ChanceScoringRule(name="rule2"),
     ]
-    bonuses = [CountBonusRule(name="bonus1")]
-    sheet = Scoresheet(rules=rules, bonuses=bonuses)
+    bonuses = [rl.CountBonusRule(name="bonus1")]
+    yahtzee_bonus = rl.YahtzeeBonusRule(name="yahtzee")
+    sheet = Scoresheet(rules=rules, bonuses=bonuses, yahtzee_bonus=yahtzee_bonus)
     result = sheet._get_rule_from_name(name="rule2")
     assert result == rules[1]
 
@@ -69,13 +70,14 @@ def test_get_rule_from_name():
 def test_update_score():
     """Check that a rule's score is updated properly from a requested index."""
     rules = [
-        ChanceScoringRule(name="rule1"),
-        ChanceScoringRule(name="rule2"),
+        rl.ChanceScoringRule(name="rule1"),
+        rl.ChanceScoringRule(name="rule2"),
     ]
-    bonuses = [CountBonusRule(name="bonus1")]
+    bonuses = [rl.CountBonusRule(name="bonus1")]
+    yahtzee_bonus = rl.YahtzeeBonusRule(name="yahtzee")
     dice = [Die(starting_face=1), Die(starting_face=2)]
 
-    sheet = Scoresheet(rules=rules, bonuses=bonuses)
+    sheet = Scoresheet(rules=rules, bonuses=bonuses, yahtzee_bonus=yahtzee_bonus)
 
     sheet.update_score(index=1, dice=dice)
 
@@ -90,18 +92,19 @@ def test_update_score():
 
 
 @pytest.mark.parametrize("section, expected", [
-    (Section.UPPER, 5),
-    (Section.LOWER, 10),
+    (rl.Section.UPPER, 5),
+    (rl.Section.LOWER, 10),
 ])
 def test_get_section_subtotal_score(section, expected):
     rules = [
-        ChanceScoringRule(name="rule1", section=Section.UPPER),
-        ChanceScoringRule(name="rule2", section=Section.UPPER),
-        ChanceScoringRule(name="rule3", section=Section.LOWER),
-        ChanceScoringRule(name="rule4", section=Section.LOWER),
+        rl.ChanceScoringRule(name="rule1", section=rl.Section.UPPER),
+        rl.ChanceScoringRule(name="rule2", section=rl.Section.UPPER),
+        rl.ChanceScoringRule(name="rule3", section=rl.Section.LOWER),
+        rl.ChanceScoringRule(name="rule4", section=rl.Section.LOWER),
     ]
-    bonuses = [CountBonusRule(name="bonus1")]
-    sheet = Scoresheet(rules=rules, bonuses=bonuses)
+    bonuses = [rl.CountBonusRule(name="bonus1")]
+    yahtzee_bonus = rl.YahtzeeBonusRule(name="yahtzee")
+    sheet = Scoresheet(rules=rules, bonuses=bonuses, yahtzee_bonus=yahtzee_bonus)
 
     # set score for rule1 to 5
     sheet.update_rule_score(name="rule1", dice=[Die(sides=6, starting_face=5)])

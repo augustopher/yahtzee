@@ -25,7 +25,11 @@ class Game:
         self.yahtzee_bonus = (
             yahtzee_bonus if yahtzee_bonus else df.DEFAULT_YAHTZEE_BONUS
         )
-        self.scoresheet = Scoresheet(rules=self.rules, bonuses=self.bonuses)
+        self.scoresheet = Scoresheet(
+            rules=self.rules,
+            bonuses=self.bonuses,
+            yahtzee_bonus=self.yahtzee_bonus
+        )
         self.players = [
             Player(scoresheet=self.scoresheet, dice=self.dice)
             for _ in range(players)

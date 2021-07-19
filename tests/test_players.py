@@ -9,7 +9,8 @@ def test_hand_init_dice():
     dice = [Die(4), Die(6)]
     sheet = Scoresheet(
         rules=[rl.ChanceScoringRule(name="rule1")],
-        bonuses=[rl.CountBonusRule(name="bonus1")]
+        bonuses=[rl.CountBonusRule(name="bonus1")],
+        yahtzee_bonus=rl.YahtzeeBonusRule(name="yahtzee")
     )
 
     player = Player(scoresheet=sheet, dice=dice)
@@ -22,7 +23,8 @@ def test_hand_init_no_dice_defaults():
     """Checks that init values are set when no dice are specified."""
     sheet = Scoresheet(
         rules=[rl.ChanceScoringRule(name="rule1")],
-        bonuses=[rl.CountBonusRule(name="bonus1")]
+        bonuses=[rl.CountBonusRule(name="bonus1")],
+        yahtzee_bonus=rl.YahtzeeBonusRule(name="yahtzee")
     )
 
     player = Player(scoresheet=sheet)
@@ -36,7 +38,8 @@ def test_hand_init_no_dice():
     but dice specs are specified."""
     sheet = Scoresheet(
         rules=[rl.ChanceScoringRule(name="rule1")],
-        bonuses=[rl.CountBonusRule(name="bonus1")]
+        bonuses=[rl.CountBonusRule(name="bonus1")],
+        yahtzee_bonus=rl.YahtzeeBonusRule(name="yahtzee")
     )
 
     player = Player(scoresheet=sheet, num_dice=3, dice_sides=3)
@@ -49,7 +52,8 @@ def test_hand_roll_dice(monkeypatch):
     """Checks that rolling the dice updates the faces."""
     sheet = Scoresheet(
         rules=[rl.ChanceScoringRule(name="rule1")],
-        bonuses=[rl.CountBonusRule(name="bonus1")]
+        bonuses=[rl.CountBonusRule(name="bonus1")],
+        yahtzee_bonus=rl.YahtzeeBonusRule(name="yahtzee")
     )
 
     player = Player(scoresheet=sheet)
