@@ -337,15 +337,16 @@ class YahtzeeBonusRule(CountBonusRule):
     def __init__(
         self,
         name: str,
+        yahtzee_rule: YahtzeeScoringRule,
         bonus_value: int = BONUS_YAHTZEE_SCORE,
         section: Section = Section.LOWER,
         counter: int = 0,
-        req_rules: Optional[List[ScoringRule]] = None,
     ):
         super().__init__(
             name=name,
             section=section,
             bonus_value=bonus_value,
             counter=counter,
-            req_rules=req_rules
+            req_rules=None
         )
+        self.yahtzee_rule = yahtzee_rule

@@ -313,7 +313,11 @@ def test_increment_count_bonus_rule(amount):
 ])
 def test_score_bonus_yahtzee_bonus_rule(count, bonus, expected):
     """Check that yahtzee count-based rules are scored correctly."""
-    rule = rl.YahtzeeBonusRule(name="name", bonus_value=bonus)
+    rule = rl.YahtzeeBonusRule(
+        name="name",
+        bonus_value=bonus,
+        yahtzee_rule=rl.YahtzeeScoringRule(name="name1"),
+    )
     rule.increment(amt=count)
     result = rule._score_bonus()
     assert result == expected
@@ -326,7 +330,11 @@ def test_score_bonus_yahtzee_bonus_rule(count, bonus, expected):
 ])
 def test_score_yahtzee_bonus_rule(count, bonus, expected):
     """Check that yahtzee count-based rules are scored correctly."""
-    rule = rl.YahtzeeBonusRule(name="name", bonus_value=bonus)
+    rule = rl.YahtzeeBonusRule(
+        name="name",
+        bonus_value=bonus,
+        yahtzee_rule=rl.YahtzeeScoringRule(name="name1"),
+    )
     rule.increment(amt=count)
     rule.score()
     assert rule.rule_score == expected
@@ -335,7 +343,10 @@ def test_score_yahtzee_bonus_rule(count, bonus, expected):
 @pytest.mark.parametrize("amount", range(11))
 def test_increment_yahtzee_bonus_rule(amount):
     """Check that yahtzee count-based rules increment correctly."""
-    rule = rl.YahtzeeBonusRule(name="name")
+    rule = rl.YahtzeeBonusRule(
+        name="name",
+        yahtzee_rule=rl.YahtzeeScoringRule(name="name1")
+    )
     rule.increment(amt=amount)
     assert rule.counter == amount
 
@@ -343,7 +354,7 @@ def test_increment_yahtzee_bonus_rule(amount):
 @pytest.mark.parametrize("bonus", [
     rl.ThresholdBonusRule(name="name"),
     rl.CountBonusRule(name="name"),
-    rl.YahtzeeBonusRule(name="name"),
+    rl.YahtzeeBonusRule(name="name", yahtzee_rule=rl.YahtzeeScoringRule(name="name1")),
 ])
 def test_scoring_bonuses_already_scored_error(bonus):
     """Check that trying to update an already-score rule

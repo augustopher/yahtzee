@@ -22,7 +22,10 @@ def test_game_init():
     dice = [Die() for _ in range(3)]
     rules = [rl.ChanceScoringRule(name="rule1")]
     bonuses = [rl.ThresholdBonusRule(name="rule2")]
-    yahtzee_bonus = rl.YahtzeeBonusRule(name="rule3")
+    yahtzee_bonus = rl.YahtzeeBonusRule(
+        name="rule3",
+        yahtzee_rule=rl.YahtzeeScoringRule(name="name1")
+    )
 
     result = Game(
         players=players,
