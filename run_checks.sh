@@ -16,21 +16,21 @@ RUN_TYPE=0
 RUN_TEST=0
 
 while getopts "almth" opt; do
-  case "$opt" in
-    a)
-      RUN_LINT=1
-      RUN_TYPE=1
-      RUN_TEST=1
-      ;;
-    l)
-      RUN_LINT=1
-      ;;
-    m)
-      RUN_TYPE=1
-      ;;
-    t)
-      RUN_TEST=1
-      ;;
+	case "$opt" in
+		a)
+			RUN_LINT=1
+			RUN_TYPE=1
+			RUN_TEST=1
+			;;
+		l)
+			RUN_LINT=1
+			;;
+		m)
+			RUN_TYPE=1
+			;;
+		t)
+			RUN_TEST=1
+			;;
 		h)
 			usage
 			;;
@@ -38,7 +38,7 @@ while getopts "almth" opt; do
 			usage
 			exit 1
 			;;
-  esac
+	esac
 done
 
 RUN_SOMETHING=$((RUN_LINT + RUN_TYPE + RUN_TEST))
