@@ -1,0 +1,9 @@
+[tool.pytest.ini_options]
+addopts = " -rsxX -l -v --strict-markers --cov=yahtzee"
+testpaths = ["tests"]
+
+[tool.mypy]
+warn_return_any = true
+warn_unused_configs = true
+disallow_untyped_defs = true
+disallow_untyped_calls = true

@@ -1,27 +1,36 @@
+from .scoring import defaults as df
+from .scoring import rules as rl
+from .scoring.scoresheet import Scoresheet
+from .players import Player
 from .dice import Die
-# from .hand import Hand
-# from .scoring.scoresheet import Scoresheet
-from .scoring import rules as rules
 
-DEFAULT_RULES = [
-    rules.MultiplesScoringRule(name="Aces (Ones)", face_value=1),
-    rules.MultiplesScoringRule(name="Twos", face_value=2),
-    rules.MultiplesScoringRule(name="Threes", face_value=3),
-    rules.MultiplesScoringRule(name="Fours", face_value=4),
-    rules.MultiplesScoringRule(name="Fives", face_value=5),
-    rules.MultiplesScoringRule(name="Sixes", face_value=6),
-    rules.NofKindScoringRule(name="Three of a Kind", n=3),
-    rules.NofKindScoringRule(name="Four of a Kind", n=4),
-    rules.FullHouseScoringRule(name="Full House"),
-    rules.SmallStraightScoringRule(name="Small Straight"),
-    rules.LargeStraightScoringRule(name="Large Straight"),
-    rules.YahtzeeScoringRule(name="YAHTZEE"),
-    rules.ChanceScoringRule(name="Chance"),
-]
+from typing import List, Optional
 
-DEFAULT_BONUSES = [
-    rules.ThresholdBonusRule(name="Upper Section Bonus"),
-    rules.CountBonusRule(name="Yahtzee Bonus")
-]
 
-DEFAULT_DICE = [Die(sides=6) for _ in range(5)]
+class Game:
+    """Representation of the full game."""
+    def __init__(
+        self,
+        players: int = 1,
+        dice: Optional[List[Die]] = None,
+        rules: Optional[List[rl.ScoringRule]] = None,
+        bonuses: Optional[List[rl.BonusRule]] = None,
+        yahtzee_bonus: Optional[rl.YahtzeeBonusRule] = None
+    ):
+        self.dice = dice if dice else df.DEFAULT_DICE
+        self.rules = rules if rules else df.DEFAULT_RULES
+        self.bonuses: List[rl.BonusRule] = (
+            bonuses if bonuses else df.DEFAULT_UPPER_BONUSES
+        )
+        self.yahtzee_bonus = (
+            yahtzee_bonus if yahtzee_bonus else df.DEFAULT_YAHTZEE_BONUS
+        )
+        self.scoresheet = Scoresheet(
+            rules=self.rules,
+            bonuses=self.bonuses,
+            yahtzee_bonus=self.yahtzee_bonus
+        )
+        self.players = [
+            Player(scoresheet=self.scoresheet, dice=self.dice)
+            for _ in range(players)
+        ]
