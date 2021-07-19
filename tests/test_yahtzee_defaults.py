@@ -59,19 +59,38 @@ def test_default_rules():
     ])
 
 
-def test_default_bonuses():
-    """Check that the default bonus rules are set correctly."""
-    bonuses = yh.DEFAULT_BONUSES
+def test_default_upper_bonuses():
+    """Check that the default upper secton bonus rules are set correctly."""
+    bonuses = yh.DEFAULT_UPPER_BONUSES
     expected_types = {
         "Upper Section Bonus": rl.ThresholdBonusRule,
-        "Yahtzee Bonus": rl.YahtzeeBonusRule,
     }
-    assert len(bonuses) == 2
+    assert len(bonuses) == 1
     assert all([
         bonuses[idx].name == name and isinstance(bonuses[idx], type)
         for idx, (name, type) in enumerate(expected_types.items())
     ])
     assert bonuses[0].req_rules == yh.DEFAULT_UPPER_RULES
+
+
+def test_default_yahtzee_bonus():
+    """Check that the default yahtzee bonus rules are set correctly."""
+    bonus = yh.DEFAULT_YAHTZEE_BONUS
+    assert bonus.name == "Yahtzee Bonus"
+    assert isinstance(bonus, rl.YahtzeeBonusRule)
+
+
+def test_default_lower_bonuses():
+    """Check that the default lower secton bonus rules are set correctly."""
+    bonuses = yh.DEFAULT_LOWER_BONUSES
+    expected_types = {
+        "Yahtzee Bonus": rl.YahtzeeBonusRule,
+    }
+    assert len(bonuses) == 1
+    assert all([
+        bonuses[idx].name == name and isinstance(bonuses[idx], type)
+        for idx, (name, type) in enumerate(expected_types.items())
+    ])
 
 
 def test_default_dice():

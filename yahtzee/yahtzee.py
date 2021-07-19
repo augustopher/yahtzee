@@ -27,9 +27,11 @@ DEFAULT_LOWER_RULES: List[rules.ScoringRule] = [
 
 DEFAULT_RULES = DEFAULT_UPPER_RULES + DEFAULT_LOWER_RULES
 
-DEFAULT_BONUSES = [
-    rules.ThresholdBonusRule(name="Upper Section Bonus", req_rules=DEFAULT_UPPER_RULES),
-    rules.YahtzeeBonusRule(name="Yahtzee Bonus")
+DEFAULT_UPPER_BONUSES = [
+    rules.ThresholdBonusRule(name="Upper Section Bonus", req_rules=DEFAULT_UPPER_RULES)
 ]
+
+DEFAULT_YAHTZEE_BONUS = rules.YahtzeeBonusRule(name="Yahtzee Bonus")
+DEFAULT_LOWER_BONUSES = [DEFAULT_YAHTZEE_BONUS]
 
 DEFAULT_DICE = [Die(sides=6) for _ in range(5)]
