@@ -1,4 +1,4 @@
-from yahtzee.hand import Hand
+from yahtzee.players import Hand
 from yahtzee.dice import Die
 
 

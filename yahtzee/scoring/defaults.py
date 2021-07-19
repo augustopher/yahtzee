@@ -1,6 +1,4 @@
 from ..dice import Die
-# from .hand import Hand
-# from .scoring.scoresheet import Scoresheet
 from . import rules as rules
 
 from typing import List

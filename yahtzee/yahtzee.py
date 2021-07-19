@@ -1,7 +1,7 @@
 from .scoring import defaults as df
 from .scoring import rules as rl
 # from .scoring.scoresheet import Scoresheet
-from .hand import Hand
+from .players import Hand
 from .dice import Die
 
 from typing import List, Optional

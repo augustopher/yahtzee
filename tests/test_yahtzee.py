@@ -1,5 +1,5 @@
 from yahtzee.yahtzee import Game
-from yahtzee.hand import Hand
+from yahtzee.players import Hand
 from yahtzee.dice import Die
 import yahtzee.scoring.rules as rl
 import yahtzee.scoring.defaults as df
