@@ -132,7 +132,8 @@ def test_sum_matching_faces(seq, face, expected):
 def test_score_threshold_bonus_rule(count, threshold, bonus, expected):
     """Check that threshold-based bonus rules score correctly."""
     rule = rules.ThresholdBonusRule(name="name", threshold=threshold, bonus_value=bonus)
-    result = rule.score(count=count)
+    rule.increment(amt=count)
+    result = rule.score()
     assert result == expected
 
 
@@ -152,7 +153,8 @@ def test_increment_threshold_bonus_rule(amount):
 def test_score_count_bonus_rule(count, bonus, expected):
     """Check that count-based bonus rules are scored correctly."""
     rule = rules.CountBonusRule(name="name", bonus_value=bonus)
-    result = rule.score(count=count)
+    rule.increment(amt=count)
+    result = rule.score()
     assert result == expected
 
 
@@ -160,5 +162,26 @@ def test_score_count_bonus_rule(count, bonus, expected):
 def test_increment_count_bonus_rule(amount):
     """Check that count-based rules increment correctly."""
     rule = rules.CountBonusRule(name="name", bonus_value=20)
+    rule.increment(amt=amount)
+    assert rule.counter == amount
+
+
+@pytest.mark.parametrize("count, bonus, expected", [
+    (0, 5, 0),
+    (1, 5, 5),
+    (20, 5, 100),
+])
+def test_score_yahtzee_bonus_rule(count, bonus, expected):
+    """Check that yahtzee count-based rules are scored correctly."""
+    rule = rules.YahtzeeBonusRule(name="name", bonus_value=bonus)
+    rule.increment(amt=count)
+    result = rule.score()
+    assert result == expected
+
+
+@pytest.mark.parametrize("amount", range(11))
+def test_increment_yahtzee_bonus_rule(amount):
+    """Check that yahtzee count-based rules increment correctly."""
+    rule = rules.YahtzeeBonusRule(name="name")
     rule.increment(amt=amount)
     assert rule.counter == amount

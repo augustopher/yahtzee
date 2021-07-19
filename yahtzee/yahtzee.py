@@ -21,7 +21,7 @@ DEFAULT_RULES = [
 
 DEFAULT_BONUSES = [
     rules.ThresholdBonusRule(name="Upper Section Bonus"),
-    rules.CountBonusRule(name="Yahtzee Bonus")
+    rules.YahtzeeBonusRule(name="Yahtzee Bonus")
 ]
 
 DEFAULT_DICE = [Die(sides=6) for _ in range(5)]

@@ -18,7 +18,8 @@ SCORE_YAHTZEE: int = 50
 
 BONUS_UPPER_SCORE = 35
 BONUS_UPPER_THRESHOLD = 63
-BONUS_LOWER_SCORE = 100
+BONUS_YAHTZEE_SCORE = 100
+BONUS_LOWER_SCORE = BONUS_YAHTZEE_SCORE
 
 
 class Section(Enum):
@@ -238,7 +239,7 @@ class BonusRule(ABC):
         return None
 
     @abstractmethod
-    def score(self, count: int) -> int:
+    def score(self) -> int:
         """Method to score a bonus rule."""
         pass  # pragma: no cover
 
@@ -261,9 +262,9 @@ class ThresholdBonusRule(BonusRule):
         )
         self.threshold = threshold
 
-    def score(self, count: int) -> int:
+    def score(self) -> int:
         """Method to score a threshold bonus rule."""
-        if count >= self.threshold:
+        if self.counter >= self.threshold:
             return self.bonus_value
         else:
             return 0
@@ -285,6 +286,23 @@ class CountBonusRule(BonusRule):
             counter=counter
         )
 
-    def score(self, count: int) -> int:
+    def score(self) -> int:
         """Method to score a count-based bonus."""
-        return count * self.bonus_value
+        return self.counter * self.bonus_value
+
+
+class YahtzeeBonusRule(CountBonusRule):
+    """Counting bonus rule, specifically for additional Yahtzees."""
+    def __init__(
+        self,
+        name: str,
+        bonus_value: int = BONUS_YAHTZEE_SCORE,
+        section: Section = Section.LOWER,
+        counter: int = 0
+    ):
+        super().__init__(
+            name=name,
+            section=section,
+            bonus_value=bonus_value,
+            counter=counter
+        )
