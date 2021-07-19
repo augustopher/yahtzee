@@ -54,7 +54,7 @@ class ScoringRule(ABC):
         """Method to score a given set of dice."""
         pass  # pragma: no cover
 
-    def _check_rule_not_scored(self):
+    def _check_rule_not_scored(self) -> bool:
         """Verifies that the rule has not already been scored."""
         return self.rule_score is None
 
@@ -276,7 +276,7 @@ class BonusRule(ABC):
         """Method to score a bonus rule."""
         pass  # pragma: no cover
 
-    def _check_rule_not_scored(self):
+    def _check_rule_not_scored(self) -> bool:
         """Verifies that the rule has not already been scored."""
         return self.rule_score is None
 

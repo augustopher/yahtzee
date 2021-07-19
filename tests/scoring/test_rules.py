@@ -324,7 +324,7 @@ def test_score_bonus_yahtzee_bonus_rule(count, bonus, expected):
     (1, 5, 5),
     (20, 5, 100),
 ])
-def test_score_bonus_yahtzee_bonus_rule(count, bonus, expected):
+def test_score_yahtzee_bonus_rule(count, bonus, expected):
     """Check that yahtzee count-based rules are scored correctly."""
     rule = rules.YahtzeeBonusRule(name="name", bonus_value=bonus)
     rule.increment(amt=count)

@@ -2,7 +2,7 @@ from ..dice import DiceList
 from .rules import ScoringRule, BonusRule, Section
 from .validators import _find_duplicates
 
-from typing import List, Dict, Optional, Any, Union
+from typing import List, Any, Union
 
 from tabulate import tabulate
 
@@ -58,7 +58,11 @@ class Scoresheet():
 
     def _get_section_subtotal_score(self, section: Section) -> int:
         """Calculates the total score for a section, before bonuses."""
-        section_rules = [self._get_rule_from_name(name=rule.name) for rule in self.rules if rule.section == section]
+        section_rules = [
+            self._get_rule_from_name(name=rule.name)
+            for rule in self.rules
+            if rule.section == section
+        ]
         section_scores = [rule.rule_score for rule in section_rules]
         return sum([s for s in section_scores if s])
 
