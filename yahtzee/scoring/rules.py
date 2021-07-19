@@ -23,6 +23,10 @@ BONUS_YAHTZEE_SCORE = 100
 BONUS_LOWER_SCORE = BONUS_YAHTZEE_SCORE
 
 
+class RuleAlreadyScoredError(ValueError):
+    pass
+
+
 class Section(Enum):
     UPPER: str = "upper"
     LOWER: str = "lower"
@@ -33,11 +37,26 @@ class ScoringRule(ABC):
     def __init__(self, name: str, section: Section):
         self.name = name
         self.section = section
+        self.rule_score: Optional[int] = None
+
+    def score(self, dice: DiceList) -> None:
+        """Method to score a given set of dice."""
+        if self._check_rule_not_scored():
+            self.rule_score = self._score_dice(dice=dice)
+        else:
+            raise RuleAlreadyScoredError(
+                f"Rule {self.name} has already been scored."
+            )
+        return None
 
     @abstractmethod
-    def score(self, dice: DiceList) -> int:
+    def _score_dice(self, dice: DiceList) -> int:
         """Method to score a given set of dice."""
         pass  # pragma: no cover
+
+    def _check_rule_not_scored(self) -> bool:
+        """Verifies that the rule has not already been scored."""
+        return self.rule_score is None
 
 
 class PatternConstantScoringRule(ScoringRule):
@@ -47,7 +66,7 @@ class PatternConstantScoringRule(ScoringRule):
         super().__init__(name=name, section=section)
         self.score_value = score_value
 
-    def score(self, dice: DiceList) -> int:
+    def _score_dice(self, dice: DiceList) -> int:
         """Method to score a given set of dice."""
         if self.validate(dice=dice):
             return self.score_value
@@ -67,7 +86,7 @@ class PatternVariableScoringRule(ScoringRule):
     def __init__(self, name: str, section: Section):
         super().__init__(name=name, section=section)
 
-    def score(self, dice: DiceList) -> int:
+    def _score_dice(self, dice: DiceList) -> int:
         """Method to score a given set of dice."""
         if self.validate(dice=dice):
             return self._scoring_func(dice=dice)
@@ -235,16 +254,31 @@ class BonusRule(ABC):
         self.bonus_value = bonus_value
         self.counter = counter
         self.req_rules = req_rules
+        self.rule_score: Optional[int] = None
 
     def increment(self, amt: int = 1) -> None:
         """Method to increment the internal counter."""
         self.counter += amt
         return None
 
+    def score(self) -> None:
+        """Method to score a given bonus."""
+        if self._check_rule_not_scored():
+            self.rule_score = self._score_bonus()
+        else:
+            raise RuleAlreadyScoredError(
+                f"Rule {self.name} has already been scored."
+            )
+        return None
+
     @abstractmethod
-    def score(self) -> int:
+    def _score_bonus(self) -> int:
         """Method to score a bonus rule."""
         pass  # pragma: no cover
+
+    def _check_rule_not_scored(self) -> bool:
+        """Verifies that the rule has not already been scored."""
+        return self.rule_score is None
 
 
 class ThresholdBonusRule(BonusRule):
@@ -267,7 +301,7 @@ class ThresholdBonusRule(BonusRule):
         )
         self.threshold = threshold
 
-    def score(self) -> int:
+    def _score_bonus(self) -> int:
         """Method to score a threshold bonus rule."""
         if self.counter >= self.threshold:
             return self.bonus_value
@@ -293,7 +327,7 @@ class CountBonusRule(BonusRule):
             req_rules=req_rules
         )
 
-    def score(self) -> int:
+    def _score_bonus(self) -> int:
         """Method to score a count-based bonus."""
         return self.counter * self.bonus_value
 

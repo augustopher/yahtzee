@@ -2,16 +2,12 @@ from ..dice import DiceList
 from .rules import ScoringRule, BonusRule, Section
 from .validators import _find_duplicates
 
-from typing import List, Dict, Optional, Any, Union
+from typing import List, Any, Union
 
 from tabulate import tabulate
 
 
 class DuplicateRuleNamesError(ValueError):
-    pass
-
-
-class RuleAlreadyScoredError(ValueError):
     pass
 
 
@@ -21,12 +17,8 @@ class Scoresheet():
         self._validate_rule_names(rules)
         self._validate_rule_names(bonuses)
         self.rules = rules
-        self.scores: Dict[str, Optional[int]] = {rule.name: None for rule in rules}
         self.rules_map = {idx + 1: rule.name for idx, rule in enumerate(rules)}
         self.bonuses = bonuses
-        self.bonus_scores: Dict[str, Optional[int]] = {
-            rule.name: None for rule in bonuses
-        }
 
     def _validate_rule_names(
         self,
@@ -50,13 +42,10 @@ class Scoresheet():
         return None
 
     def update_rule_score(self, name: str, dice: DiceList) -> None:
-        """Updates the score for a given rule, based on the given dice."""
-        if not self._check_rule_not_scored(name=name):
-            raise RuleAlreadyScoredError(
-                f"Rule {name} has already been scored."
-            )
-        selected_rule = self._get_rule_from_name(name=name)
-        self.scores[name] = selected_rule.score(dice=dice)
+        """Updates the score for a rule, from a rule name,
+        based on the given dice."""
+        rule = self._get_rule_from_name(name=name)
+        rule.score(dice=dice)
         return None
 
     def _get_rule_from_name(self, name: str) -> ScoringRule:
@@ -67,14 +56,14 @@ class Scoresheet():
         """Helper to retrieve the rule name from the user-input index."""
         return self.rules_map[index]
 
-    def _check_rule_not_scored(self, name: str) -> bool:
-        """Checks that a rule is not already scored."""
-        return self.scores[name] is None
-
     def _get_section_subtotal_score(self, section: Section) -> int:
         """Calculates the total score for a section, before bonuses."""
-        section_rules = [rule.name for rule in self.rules if rule.section == section]
-        section_scores = [self.scores[rule] for rule in section_rules]
+        section_rules = [
+            self._get_rule_from_name(name=rule.name)
+            for rule in self.rules
+            if rule.section == section
+        ]
+        section_scores = [rule.rule_score for rule in section_rules]
         return sum([s for s in section_scores if s])
 
     @staticmethod
@@ -92,7 +81,8 @@ class Scoresheet():
     def _generate_score_row(self, name: str) -> List[Any]:
         """Assembles the row corresponding to the given rule."""
         index = next(idx for idx, nm in self.rules_map.items() if nm == name)
-        row = [index, name, self.scores[name]]
+        rule = self._get_rule_from_name(name=name)
+        row = [index, name, rule.rule_score]
         return row
 
     def _generate_section(self, section: Section) -> List[List[Any]]:

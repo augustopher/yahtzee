@@ -1,7 +1,6 @@
 from yahtzee.scoring.scoresheet import (
     Scoresheet,
     DuplicateRuleNamesError,
-    RuleAlreadyScoredError,
 )
 from yahtzee.scoring.rules import (
     ChanceScoringRule,
@@ -24,9 +23,7 @@ def test_scoresheet_init_valid_rules():
     bonuses = [CountBonusRule(name="bonus1")]
     result = Scoresheet(rules=rules, bonuses=bonuses)
     assert len(result.rules) == 2
-    assert all([score is None for score in result.scores.values()])
     assert len(result.bonuses) == 1
-    assert all([score is None for score in result.bonus_scores.values()])
 
 
 @pytest.mark.parametrize("rules, bonuses", [
@@ -69,63 +66,6 @@ def test_get_rule_from_name():
     assert result == rules[1]
 
 
-@pytest.mark.parametrize("score_rule, expected", [
-    ("rule1", False),
-    ("rule2", True),
-])
-def test_check_rule_not_scored(score_rule, expected):
-    """Checks that a rule already scored or not, properly."""
-    rules = [
-        ChanceScoringRule(name="rule1"),
-        ChanceScoringRule(name="rule2"),
-    ]
-    bonuses = [CountBonusRule(name="bonus1")]
-    sheet = Scoresheet(rules=rules, bonuses=bonuses)
-    sheet.scores[score_rule] = 1
-    result = sheet._check_rule_not_scored(name="rule1")
-    assert result is expected
-
-
-def test_update_rule_score():
-    """Check that a rule's score is updated properly from a requested name."""
-    rules = [
-        ChanceScoringRule(name="rule1"),
-        ChanceScoringRule(name="rule2"),
-    ]
-    bonuses = [CountBonusRule(name="bonus1")]
-    dice = [Die(starting_face=1), Die(starting_face=2)]
-
-    sheet = Scoresheet(rules=rules, bonuses=bonuses)
-
-    sheet.update_rule_score(name="rule1", dice=dice)
-
-    expected_scores = {
-        "rule1": 3,
-        "rule2": None,
-    }
-
-    assert all([
-        score == expected_scores[rule] for rule, score in sheet.scores.items()
-    ])
-
-
-def test_update_rule_score_error():
-    """Check that scoring a previously-scored rule raises
-    the appropriate error."""
-    rules = [
-        ChanceScoringRule(name="rule1"),
-        ChanceScoringRule(name="rule2"),
-    ]
-    bonuses = [CountBonusRule(name="bonus1")]
-    dice = [Die(starting_face=1), Die(starting_face=2)]
-
-    sheet = Scoresheet(rules=rules, bonuses=bonuses)
-
-    sheet.update_rule_score(name="rule1", dice=dice)
-    with pytest.raises(RuleAlreadyScoredError, match=r"Rule.*"):
-        sheet.update_rule_score(name="rule1", dice=dice)
-
-
 def test_update_score():
     """Check that a rule's score is updated properly from a requested index."""
     rules = [
@@ -140,12 +80,12 @@ def test_update_score():
     sheet.update_score(index=1, dice=dice)
 
     expected_scores = {
-        "rule1": 3,
-        "rule2": None,
+        0: 3,
+        1: None,
     }
 
     assert all([
-        score == expected_scores[rule] for rule, score in sheet.scores.items()
+        rule.rule_score == expected_scores[idx] for idx, rule in enumerate(rules)
     ])
 
 
