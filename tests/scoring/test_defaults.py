@@ -1,4 +1,4 @@
-from yahtzee import yahtzee as yh
+from yahtzee.scoring import defaults as yh
 from yahtzee.scoring import rules as rl
 
 

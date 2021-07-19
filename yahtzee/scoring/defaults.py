@@ -1,7 +1,7 @@
-from .dice import Die
+from ..dice import Die
 # from .hand import Hand
 # from .scoring.scoresheet import Scoresheet
-from .scoring import rules as rules
+from . import rules as rules
 
 from typing import List
 
