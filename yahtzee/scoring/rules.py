@@ -9,6 +9,7 @@ from .validators import (
 
 from abc import ABC, abstractmethod
 from enum import Enum
+from typing import List, Optional
 
 # scores that are constant, regardless of dice values
 SCORE_FULL_HOUSE: int = 25
@@ -226,12 +227,14 @@ class BonusRule(ABC):
         name: str,
         section: Section,
         bonus_value: int,
-        counter: int = 0
+        counter: int = 0,
+        req_rules: Optional[List[ScoringRule]] = None
     ):
         self.name = name
         self.section = section
         self.bonus_value = bonus_value
         self.counter = counter
+        self.req_rules = req_rules
 
     def increment(self, amt: int = 1) -> None:
         """Method to increment the internal counter."""
@@ -252,13 +255,15 @@ class ThresholdBonusRule(BonusRule):
         section: Section = Section.UPPER,
         threshold: int = BONUS_UPPER_THRESHOLD,
         bonus_value: int = BONUS_UPPER_SCORE,
-        counter: int = 0
+        counter: int = 0,
+        req_rules: Optional[List[ScoringRule]] = None
     ):
         super().__init__(
             name=name,
             section=section,
             bonus_value=bonus_value,
-            counter=counter
+            counter=counter,
+            req_rules=req_rules
         )
         self.threshold = threshold
 
@@ -277,13 +282,15 @@ class CountBonusRule(BonusRule):
         name: str,
         section: Section = Section.LOWER,
         bonus_value: int = BONUS_LOWER_SCORE,
-        counter: int = 0
+        counter: int = 0,
+        req_rules: Optional[List[ScoringRule]] = None,
     ):
         super().__init__(
             name=name,
             section=section,
             bonus_value=bonus_value,
-            counter=counter
+            counter=counter,
+            req_rules=req_rules
         )
 
     def score(self) -> int:
@@ -298,11 +305,13 @@ class YahtzeeBonusRule(CountBonusRule):
         name: str,
         bonus_value: int = BONUS_YAHTZEE_SCORE,
         section: Section = Section.LOWER,
-        counter: int = 0
+        counter: int = 0,
+        req_rules: Optional[List[ScoringRule]] = None,
     ):
         super().__init__(
             name=name,
             section=section,
             bonus_value=bonus_value,
-            counter=counter
+            counter=counter,
+            req_rules=req_rules
         )
