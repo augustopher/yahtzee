@@ -25,7 +25,7 @@ DEFAULT_LOWER_RULES: List[rules.ScoringRule] = [
 
 DEFAULT_RULES = DEFAULT_UPPER_RULES + DEFAULT_LOWER_RULES
 
-DEFAULT_UPPER_BONUSES = [
+DEFAULT_UPPER_BONUSES: List[rules.BonusRule] = [
     rules.ThresholdBonusRule(name="Upper Section Bonus", req_rules=DEFAULT_UPPER_RULES)
 ]
 

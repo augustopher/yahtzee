@@ -1,5 +1,5 @@
 from yahtzee.yahtzee import Game
-from yahtzee.players import Hand
+from yahtzee.players import Player
 from yahtzee.dice import Die
 import yahtzee.scoring.rules as rl
 import yahtzee.scoring.defaults as df
@@ -9,7 +9,7 @@ def test_game_init_defaults():
     """Check that Game is configured correctly with default values."""
     result = Game()
     assert len(result.players) == 1
-    assert all([isinstance(p, Hand) for p in result.players])
+    assert all([isinstance(p, Player) for p in result.players])
     assert result.dice == df.DEFAULT_DICE
     assert result.rules == df.DEFAULT_RULES
     assert result.bonuses == df.DEFAULT_UPPER_BONUSES
@@ -32,7 +32,7 @@ def test_game_init():
         yahtzee_bonus=yahtzee_bonus
     )
     assert len(result.players) == 2
-    assert all([isinstance(p, Hand) for p in result.players])
+    assert all([isinstance(p, Player) for p in result.players])
     assert result.dice == dice
     assert result.rules == rules
     assert result.bonuses == bonuses
