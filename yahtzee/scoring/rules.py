@@ -9,8 +9,6 @@ from .validators import (
 
 from abc import ABC, abstractmethod
 from enum import Enum
-from typing import Optional
-from dataclasses import dataclass
 
 # scores that are constant, regardless of dice values
 SCORE_FULL_HOUSE: int = 25
@@ -220,17 +218,6 @@ def _sum_matching_faces(dice: DiceList, face_value: int) -> int:
     return _sum_all_showing_faces(dice=matching_dice)
 
 
-@dataclass
-class BonusCounter:
-    """Counter for a bonus rule."""
-    count: int = 0
-
-    def increment(self, amt: int = 1) -> None:
-        """Increment the stored count."""
-        self.count += amt
-        return None
-
-
 class BonusRule(ABC):
     """Generic rule for scoring a bonus."""
     def __init__(
@@ -238,16 +225,16 @@ class BonusRule(ABC):
         name: str,
         section: Section,
         bonus_value: int,
-        counter: Optional[BonusCounter] = None
+        counter: int = 0
     ):
         self.name = name
         self.section = section
         self.bonus_value = bonus_value
-        self.counter = counter if counter else BonusCounter()
+        self.counter = counter
 
     def increment(self, amt: int = 1) -> None:
         """Method to increment the internal counter."""
-        self.counter.increment(amt=amt)
+        self.counter += amt
         return None
 
     @abstractmethod
@@ -264,7 +251,7 @@ class ThresholdBonusRule(BonusRule):
         section: Section = Section.UPPER,
         threshold: int = BONUS_UPPER_THRESHOLD,
         bonus_value: int = BONUS_UPPER_SCORE,
-        counter: Optional[BonusCounter] = None
+        counter: int = 0
     ):
         super().__init__(
             name=name,
@@ -289,7 +276,7 @@ class CountBonusRule(BonusRule):
         name: str,
         section: Section = Section.LOWER,
         bonus_value: int = BONUS_LOWER_SCORE,
-        counter: Optional[BonusCounter] = None
+        counter: int = 0
     ):
         super().__init__(
             name=name,

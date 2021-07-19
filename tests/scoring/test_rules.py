@@ -141,7 +141,7 @@ def test_increment_threshold_bonus_rule(amount):
     """Check that threshold-based rules increment correctly."""
     rule = rules.ThresholdBonusRule(name="name", threshold=10, bonus_value=20)
     rule.increment(amt=amount)
-    assert rule.counter.count == amount
+    assert rule.counter == amount
 
 
 @pytest.mark.parametrize("count, bonus, expected", [
@@ -161,21 +161,4 @@ def test_increment_count_bonus_rule(amount):
     """Check that count-based rules increment correctly."""
     rule = rules.CountBonusRule(name="name", bonus_value=20)
     rule.increment(amt=amount)
-    assert rule.counter.count == amount
-
-
-@pytest.mark.parametrize("n", range(11))
-def test_count_bonus_counter_init(n):
-    """Check that the counter is correctly created."""
-    result = rules.BonusCounter(count=n)
-    assert result.count == n
-
-
-@pytest.mark.parametrize("n", range(11))
-def test_count_bonus_counter_increment(n):
-    """Check that the counter increments correctly."""
-    counter = rules.BonusCounter()
-    for _ in range(n):
-        counter.increment()
-    result = counter.count
-    assert result == n
+    assert rule.counter == amount

@@ -1,6 +1,6 @@
 from setuptools import setup
 
-install_requires = ["tabulate", "dataclasses ; python_version<'3.7'"]
+install_requires = ["tabulate"]
 test_requires = ["pytest", "pytest-mock", "pytest-cov"]
 docs_requires = []
 typecheck_requires = ["mypy", "types-tabulate"]
