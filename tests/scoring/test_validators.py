@@ -1,5 +1,6 @@
 import yahtzee.scoring.validators as vl
 from yahtzee.dice import Die
+import yahtzee.errors as er
 
 import pytest
 
@@ -88,7 +89,7 @@ def test_validate_full_house(seq, n1, n2, expected):
 
 def test_validate_full_house_error():
     """Check that invalid n values raise the appropriate error."""
-    with pytest.raises(vl.RuleInputValueError, match=r"A full house.*"):
+    with pytest.raises(er.RuleInputValueError, match=r"A full house.*"):
         vl._validate_full_house(dice=[Die()], large_n=2, small_n=3)
 
 

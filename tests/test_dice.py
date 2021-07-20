@@ -1,4 +1,5 @@
-from yahtzee.dice import Die, IllegalDieValueError
+from yahtzee.dice import Die
+from yahtzee.errors import IllegalDieValueError
 
 import pytest
 

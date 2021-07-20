@@ -1,12 +1,9 @@
 from ..dice import DiceList
+from .. import errors as er
 
 from itertools import combinations
 from collections import Counter
 from typing import List
-
-
-class RuleInputValueError(ValueError):
-    pass
 
 
 def _find_matching_dice(dice: DiceList, face_value: int) -> DiceList:
@@ -28,7 +25,7 @@ def _validate_nofkind(dice: DiceList, n: int) -> bool:
 def _validate_full_house(dice: DiceList, large_n: int, small_n: int) -> bool:
     """Helper to check for a full house (2 n-of-a-kind, large_n > small_n)."""
     if small_n >= large_n:
-        raise RuleInputValueError(
+        raise er.RuleInputValueError(
             f"A full house requires `large_n` > `small_n`. "
             f"Received large_n {large_n}, small_n {small_n}."
         )

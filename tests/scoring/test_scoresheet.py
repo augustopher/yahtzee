@@ -1,9 +1,7 @@
-from yahtzee.scoring.scoresheet import (
-    Scoresheet,
-    DuplicateRuleNamesError,
-)
+from yahtzee.scoring.scoresheet import Scoresheet
 import yahtzee.scoring.rules as rl
 from yahtzee.dice import Die
+import yahtzee.errors as er
 
 import pytest
 
@@ -37,7 +35,7 @@ def test_scoresheet_init_valid_rules():
 ])
 def test_scoresheet_init_dupe_rules_error(rules, bonuses):
     """Check that duplicate rule names raise the appropriate error."""
-    with pytest.raises(DuplicateRuleNamesError, match=r"Rules cannot.*"):
+    with pytest.raises(er.DuplicateRuleNamesError, match=r"Rules cannot.*"):
         Scoresheet(
             rules=rules,
             bonuses=bonuses,

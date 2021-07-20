@@ -1,9 +1,7 @@
+from . import errors as er
+
 import random
 from typing import Optional, List
-
-
-class IllegalDieValueError(ValueError):
-    pass
 
 
 class Die:
@@ -14,7 +12,7 @@ class Die:
         self.showing_face = starting_face if starting_face else self._roll_die()
 
         if self.showing_face not in self.faces:
-            raise IllegalDieValueError(
+            raise er.IllegalDieValueError(
                 f"Starting face {self.showing_face} is not in valid faces: "
                 f"{self.faces}."
             )

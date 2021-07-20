@@ -1,5 +1,6 @@
 from ..dice import DiceList
 from . import validators as vl
+from .. import errors as er
 
 from abc import ABC, abstractmethod
 from enum import Enum
@@ -15,10 +16,6 @@ BONUS_UPPER_SCORE = 35
 BONUS_UPPER_THRESHOLD = 63
 BONUS_YAHTZEE_SCORE = 100
 BONUS_LOWER_SCORE = BONUS_YAHTZEE_SCORE
-
-
-class RuleAlreadyScoredError(ValueError):
-    pass
 
 
 class Section(Enum):
@@ -38,7 +35,7 @@ class ScoringRule(ABC):
         if self._check_rule_not_scored():
             self.rule_score = self._score_dice(dice=dice)
         else:
-            raise RuleAlreadyScoredError(
+            raise er.RuleAlreadyScoredError(
                 f"Rule {self.name} has already been scored."
             )
         return None
@@ -254,7 +251,7 @@ class BonusRule(ABC):
         if self._check_rule_not_scored():
             self.rule_score = self._score_bonus()
         else:
-            raise RuleAlreadyScoredError(
+            raise er.RuleAlreadyScoredError(
                 f"Rule {self.name} has already been scored."
             )
         return None

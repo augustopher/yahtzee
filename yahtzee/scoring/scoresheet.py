@@ -1,14 +1,11 @@
 from ..dice import DiceList
 from . import rules as rl
 from .validators import _find_duplicates
+from .. import errors as er
 
 from typing import List, Any, cast
 
 from tabulate import tabulate
-
-
-class DuplicateRuleNamesError(ValueError):
-    pass
 
 
 class Scoresheet:
@@ -41,7 +38,7 @@ class Scoresheet:
         all_names = rule_names + bonus_names + [yahtzee_bonus.name]
         duplicate_names = _find_duplicates(all_names)
         if duplicate_names:
-            raise DuplicateRuleNamesError(
+            raise er.DuplicateRuleNamesError(
                 f"Rules cannot share names. Duplicate names are: "
                 f"{duplicate_names}."
             )
