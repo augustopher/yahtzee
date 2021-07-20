@@ -1,44 +1,44 @@
 Yahtzee: API Public Reference
 =============================
 
-.. automodule:: yahtzee
+.. automodule:: yahtzee.yahtzee
     :members:
     :undoc-members:
     :inherited-members:
     :show-inheritance:
 
-.. automodule:: players
+.. automodule:: yahtzee.players
     :members:
     :undoc-members:
     :inherited-members:
     :show-inheritance:
 
-.. automodule:: dice
+.. automodule:: yahtzee.dice
     :members:
     :undoc-members:
     :inherited-members:
     :show-inheritance:
 
-.. automodule:: scoring.rules
+.. automodule:: yahtzee.scoring.rules
     :members:
     :undoc-members:
     :inherited-members:
     :show-inheritance:
 
-.. automodule:: scoring.validators
+.. automodule:: yahtzee.scoring.validators
     :members:
     :undoc-members:
     :inherited-members:
     :private-members:
     :show-inheritance:
 
-.. automodule:: scoring.defaults
+.. automodule:: yahtzee.scoring.defaults
     :members:
     :undoc-members:
     :inherited-members:
     :show-inheritance:
 
-.. automodule:: scoring.scoresheet
+.. automodule:: yahtzee.scoring.scoresheet
     :members:
     :undoc-members:
     :inherited-members:
