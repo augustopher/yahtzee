@@ -6,6 +6,7 @@ usage() {
 	echo "-l  Run lint check (flake8)"
 	echo "-m  Run type check (mypy)"
 	echo "-t  Run tests (pytest)"
+	echo "-v  Run version check"
 	echo "-h  Brings up this message"
 }
 
@@ -14,13 +15,15 @@ OPTIND=1
 RUN_LINT=0
 RUN_TYPE=0
 RUN_TEST=0
+RUN_VER=0
 
-while getopts "almth" opt; do
+while getopts "almtvh" opt; do
 	case "$opt" in
 		a)
 			RUN_LINT=1
 			RUN_TYPE=1
 			RUN_TEST=1
+			RUN_VER=1
 			;;
 		l)
 			RUN_LINT=1
@@ -30,6 +33,9 @@ while getopts "almth" opt; do
 			;;
 		t)
 			RUN_TEST=1
+			;;
+		v)
+			RUN_VER=1
 			;;
 		h)
 			usage
@@ -41,9 +47,22 @@ while getopts "almth" opt; do
 	esac
 done
 
-RUN_SOMETHING=$((RUN_LINT + RUN_TYPE + RUN_TEST))
+RUN_SOMETHING=$((RUN_LINT + RUN_TYPE + RUN_TEST + RUN_VER))
 if [ $RUN_SOMETHING -eq 0 ]; then
 	echo "No checks selected, no checks run."
+fi
+
+if [ $RUN_VER -gt 0 ]; then
+        echo "Checking versions across all files..."
+        VER_PATTERN="\d+\.\d+\.\d+([-_][a-zA-z]*)?"
+        VER_SETUP=`grep "version=" setup.py | grep -Eo $VER_PATTERN`
+        VER_DOCS=`grep "release =" docs/conf.py | grep -Eo $VER_PATTERN`
+        if [ "$VER_SETUP" != "$VER_DOCS" ]; then
+                echo "Versions don't match."
+                echo "setup.py at $VER_SETUP, docs/conf.py at $VER_DOCS"
+                exit 1
+        fi
+        echo "All versions match."
 fi
 
 if [ $RUN_LINT -gt 0 ]; then
