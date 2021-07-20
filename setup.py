@@ -2,7 +2,7 @@ from setuptools import setup
 
 install_requires = ["tabulate"]
 test_requires = ["pytest", "pytest-mock", "pytest-cov"]
-docs_requires = []
+docs_requires = ["sphinx", "myst-parser", "sphinx-rtd-theme"]
 typecheck_requires = ["mypy", "types-tabulate"]
 lint_requires = ["flake8"]
 
