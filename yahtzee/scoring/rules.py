@@ -50,6 +50,12 @@ class ScoringRule(ABC):
         return None
 
     @abstractmethod
+    def validate(self, dice: DiceList) -> bool:
+        """Method to check that a desired pattern
+        or other trait is present in the given dice."""
+        pass  # pragma: no cover
+
+    @abstractmethod
     def _score_dice(self, dice: DiceList) -> int:
         """Method to score a given set of dice."""
         pass  # pragma: no cover
@@ -59,7 +65,7 @@ class ScoringRule(ABC):
         return self.rule_score is None
 
 
-class PatternConstantScoringRule(ScoringRule):
+class ConstantPatternScoringRule(ScoringRule):
     """Generic scoring rule, which looks for a particular pattern,
     and has a constant score value."""
     def __init__(self, name: str, section: Section, score_value: int):
@@ -73,14 +79,8 @@ class PatternConstantScoringRule(ScoringRule):
         else:
             return 0
 
-    @abstractmethod
-    def validate(self, dice: DiceList) -> bool:
-        """Method to check that the desired pattern
-        is present in the given dice."""
-        pass  # pragma: no cover
 
-
-class PatternVariableScoringRule(ScoringRule):
+class VariablePatternScoringRule(ScoringRule):
     """Generic scoring rule, which looks for a particular pattern,
     and has a variable score value."""
     def __init__(self, name: str, section: Section):
@@ -98,14 +98,8 @@ class PatternVariableScoringRule(ScoringRule):
         """Method for calculating a dice-dependent score."""
         pass  # pragma: no cover
 
-    @abstractmethod
-    def validate(self, dice: DiceList) -> bool:
-        """Method to check that the desired pattern
-        is present in the given dice."""
-        pass  # pragma: no cover
 
-
-class ChanceScoringRule(PatternVariableScoringRule):
+class ChanceScoringRule(VariablePatternScoringRule):
     """Rules which take any 5 dice."""
     def __init__(self, name: str, section: Section = Section.LOWER):
         super().__init__(name=name, section=section)
@@ -121,7 +115,7 @@ class ChanceScoringRule(PatternVariableScoringRule):
         return True
 
 
-class MultiplesScoringRule(PatternVariableScoringRule):
+class MultiplesScoringRule(VariablePatternScoringRule):
     """Rules which look for multiple dice with a specific face value."""
     def __init__(self, name: str, face_value: int, section: Section = Section.UPPER):
         super().__init__(name=name, section=section)
@@ -138,7 +132,7 @@ class MultiplesScoringRule(PatternVariableScoringRule):
         return True
 
 
-class NofKindScoringRule(PatternVariableScoringRule):
+class NofKindScoringRule(VariablePatternScoringRule):
     """Rules which look for n-of-a-kind of a face value, without explicitly
     specifying the desired face value."""
     def __init__(self, name: str, n: int, section: Section = Section.LOWER):
@@ -159,7 +153,7 @@ class NofKindScoringRule(PatternVariableScoringRule):
         return any(n_or_more_kind_present)
 
 
-class YahtzeeScoringRule(PatternConstantScoringRule):
+class YahtzeeScoringRule(ConstantPatternScoringRule):
     """Rules which look for a Yahtzee (5-of-a-kind)."""
     def __init__(
         self,
@@ -175,7 +169,7 @@ class YahtzeeScoringRule(PatternConstantScoringRule):
         return _validate_nofkind(dice=dice, n=5)
 
 
-class FullHouseScoringRule(PatternConstantScoringRule):
+class FullHouseScoringRule(ConstantPatternScoringRule):
     """Rules which look for a full house (N1-of-a-kind and N2-of-a-kind, N1 > N2)."""
     def __init__(
         self,
@@ -198,7 +192,7 @@ class FullHouseScoringRule(PatternConstantScoringRule):
         )
 
 
-class LargeStraightScoringRule(PatternConstantScoringRule):
+class LargeStraightScoringRule(ConstantPatternScoringRule):
     """Rules which look for a large straight (5 dice sequence)."""
     def __init__(
         self,
@@ -213,7 +207,7 @@ class LargeStraightScoringRule(PatternConstantScoringRule):
         return _validate_large_straight(dice=dice)
 
 
-class SmallStraightScoringRule(PatternConstantScoringRule):
+class SmallStraightScoringRule(ConstantPatternScoringRule):
     """Rules which look for a small straight (4 dice sequence)."""
     def __init__(
         self,
