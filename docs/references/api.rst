@@ -1,4 +1,4 @@
-Yahtzee: API Public Reference
+Yahtzee: Public API Reference
 =============================
 
 .. automodule:: yahtzee.yahtzee
