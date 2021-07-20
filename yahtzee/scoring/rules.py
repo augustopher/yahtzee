@@ -96,12 +96,14 @@ class ChanceScoringRule(VariablePatternScoringRule):
         super().__init__(name=name, section=section)
 
     def _scoring_func(self, dice: DiceList) -> int:
-        """Method for calculating a dice-dependent score."""
+        """Method for calculating a dice-dependent score.
+        Scores as the sum of all showing faces."""
         return _sum_all_showing_faces(dice=dice)
 
     def validate(self, dice: DiceList) -> bool:
         """Method to check that the desired pattern
-        is present in the given dice."""
+        is present in the given dice.
+        Always validates, since Chance can score for any dice."""
         # Any dice combo is valid
         return True
 
@@ -113,12 +115,14 @@ class MultiplesScoringRule(VariablePatternScoringRule):
         self.face_value = face_value
 
     def _scoring_func(self, dice: DiceList) -> int:
-        """Method for calculating a dice-dependent score."""
+        """Method for calculating a dice-dependent score.
+        Scores as the sum of all showing faces which match the given face value."""
         return _sum_matching_faces(dice=dice, face_value=self.face_value)
 
     def validate(self, dice: DiceList) -> bool:
         """Method to check that the desired pattern
-        is present in the given dice."""
+        is present in the given dice.
+        Always validates, since Multiples can score for any dice."""
         # Any dice combo is valid
         return True
 
@@ -136,7 +140,9 @@ class NofKindScoringRule(VariablePatternScoringRule):
 
     def validate(self, dice: DiceList) -> bool:
         """Method to check that the desired pattern
-        is present in the given dice."""
+        is present in the given dice.
+        Validates if an n-of-a-kind is present,
+        or if any m-of-a-kind is present (where m > n)."""
         n_or_more_kind_present = [
             vl._validate_nofkind(dice=dice, n=x)
             for x in range(self.n, len(dice) + 1)
@@ -156,7 +162,8 @@ class YahtzeeScoringRule(ConstantPatternScoringRule):
 
     def validate(self, dice: DiceList) -> bool:
         """Method to check that the desired pattern
-        is present in the given dice."""
+        is present in the given dice.
+        Validates if a Yahtzee (5-of-a-kind) is present."""
         return vl._validate_nofkind(dice=dice, n=5)
 
 
@@ -175,7 +182,9 @@ class FullHouseScoringRule(ConstantPatternScoringRule):
         self.small_n = small_n
 
     def validate(self, dice: DiceList) -> bool:
-        """Method to check that a full house is present in the given dice."""
+        """Method to check that the desired pattern
+        is present in the given dice.
+        Validates if a full house (m-of-a-kind and n-of-a-kind, m > n) is present."""
         return vl._validate_full_house(
             dice=dice,
             large_n=self.large_n,
@@ -194,7 +203,9 @@ class LargeStraightScoringRule(ConstantPatternScoringRule):
         super().__init__(name=name, section=section, score_value=score_value)
 
     def validate(self, dice: DiceList) -> bool:
-        """Method to check that a full house is present in the given dice."""
+        """Method to check that the desired pattern
+        is present in the given dice.
+        Validates if a large straight (5 consecutive values in 5 dice) is present."""
         return vl._validate_large_straight(dice=dice)
 
 
@@ -209,7 +220,9 @@ class SmallStraightScoringRule(ConstantPatternScoringRule):
         super().__init__(name=name, section=section, score_value=score_value)
 
     def validate(self, dice: DiceList) -> bool:
-        """Method to check that a full house is present in the given dice."""
+        """Method to check that the desired pattern
+        is present in the given dice.
+        Validates if a small straight (4 consecutive values in 5 dice) is present."""
         return vl._validate_small_straight(dice=dice)
 
 
@@ -247,7 +260,7 @@ class BonusRule(ABC):
         return None
 
     def score(self) -> None:
-        """Method to score a given bonus."""
+        """Method to score a given bonus, and update the associated score value."""
         if self._check_rule_not_scored():
             self.rule_score = self._score_bonus()
         else:
@@ -287,7 +300,8 @@ class ThresholdBonusRule(BonusRule):
         self.threshold = threshold
 
     def _score_bonus(self) -> int:
-        """Method to score a threshold bonus rule."""
+        """Method to score a threshold bonus rule.
+        Scores as the bonus value if the counter meets the threshold, 0 otherwise."""
         if self.counter >= self.threshold:
             return self.bonus_value
         else:
@@ -313,7 +327,8 @@ class CountBonusRule(BonusRule):
         )
 
     def _score_bonus(self) -> int:
-        """Method to score a count-based bonus."""
+        """Method to score a count-based bonus.
+        Scores as a counter times the bonus value."""
         return self.counter * self.bonus_value
 
 
