@@ -12,7 +12,7 @@ import pytest
 def test_find_matching_dice(seq, face, expected):
     """Check that the correct dice are identified and returned."""
     dice = [Die(starting_face=s) for s in seq]
-    result = vl._find_matching_dice(dice=dice, face_value=face)
+    result = vl.find_matching_dice(dice=dice, face_value=face)
     result_faces = [die.showing_face for die in result]
     assert len(set(result_faces)) == 1
     assert result_faces[0] == face
@@ -22,7 +22,7 @@ def test_find_matching_dice(seq, face, expected):
 def test_find_matching_dice_no_match():
     """Check that no dice are returned when no match is found."""
     dice = [Die(starting_face=s) for s in [1, 1, 1, 3, 3]]
-    result = vl._find_matching_dice(dice=dice, face_value=2)
+    result = vl.find_matching_dice(dice=dice, face_value=2)
     assert len(result) == 0
 
 
@@ -32,7 +32,7 @@ def test_find_matching_dice_no_match():
 ])
 def test_validate_straight(seq, expected):
     """Check that straights are properly identified."""
-    result = vl._validate_straight(values=seq)
+    result = vl.validate_straight(values=seq)
     assert result is expected
 
 
@@ -43,7 +43,7 @@ def test_validate_straight(seq, expected):
 def test_validate_large_straight(seq, expected):
     """Check that large straights are properly identified."""
     dice = [Die(starting_face=s) for s in seq]
-    result = vl._validate_large_straight(dice=dice)
+    result = vl.validate_large_straight(dice=dice)
     assert result is expected
 
 
@@ -55,7 +55,7 @@ def test_validate_large_straight(seq, expected):
 def test_validate_small_straight(seq, expected):
     """Check that small straights are properly identified."""
     dice = [Die(starting_face=s) for s in seq]
-    result = vl._validate_small_straight(dice=dice)
+    result = vl.validate_small_straight(dice=dice)
     assert result is expected
 
 
@@ -69,7 +69,7 @@ def test_validate_small_straight(seq, expected):
 def test_validate_nofkind(seq, n, expected):
     """Check that n-of-a-kind are properly identified."""
     dice = [Die(starting_face=s) for s in seq]
-    result = vl._validate_nofkind(dice=dice, n=n)
+    result = vl.validate_nofkind(dice=dice, n=n)
     assert result is expected
 
 
@@ -83,14 +83,14 @@ def test_validate_nofkind(seq, n, expected):
 def test_validate_full_house(seq, n1, n2, expected):
     """Check that full houses are properly identified."""
     dice = [Die(starting_face=s) for s in seq]
-    result = vl._validate_full_house(dice=dice, large_n=n1, small_n=n2)
+    result = vl.validate_full_house(dice=dice, large_n=n1, small_n=n2)
     assert result is expected
 
 
 def test_validate_full_house_error():
     """Check that invalid n values raise the appropriate error."""
     with pytest.raises(er.RuleInputValueError, match=r"A full house.*"):
-        vl._validate_full_house(dice=[Die()], large_n=2, small_n=3)
+        vl.validate_full_house(dice=[Die()], large_n=2, small_n=3)
 
 
 @pytest.mark.parametrize("vals, expected", [
@@ -101,5 +101,5 @@ def test_validate_full_house_error():
 ])
 def test_find_duplicates(vals, expected):
     """Check that duplicates are found properly."""
-    result = vl._find_duplicates(vals)
+    result = vl.find_duplicates(vals)
     assert sorted(result) == sorted(expected)

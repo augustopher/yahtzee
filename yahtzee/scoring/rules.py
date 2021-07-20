@@ -19,6 +19,8 @@ BONUS_LOWER_SCORE = BONUS_YAHTZEE_SCORE
 
 
 class Section(Enum):
+    """Values for the sections of the scoresheet,
+    used to organize different rules and bonuses."""
     UPPER: str = "upper"
     LOWER: str = "lower"
 
@@ -144,7 +146,7 @@ class NofKindScoringRule(VariablePatternScoringRule):
         Validates if an n-of-a-kind is present,
         or if any m-of-a-kind is present (where m > n)."""
         n_or_more_kind_present = [
-            vl._validate_nofkind(dice=dice, n=x)
+            vl.validate_nofkind(dice=dice, n=x)
             for x in range(self.n, len(dice) + 1)
         ]
         return any(n_or_more_kind_present)
@@ -164,7 +166,7 @@ class YahtzeeScoringRule(ConstantPatternScoringRule):
         """Method to check that the desired pattern
         is present in the given dice.
         Validates if a Yahtzee (5-of-a-kind) is present."""
-        return vl._validate_nofkind(dice=dice, n=5)
+        return vl.validate_nofkind(dice=dice, n=5)
 
 
 class FullHouseScoringRule(ConstantPatternScoringRule):
@@ -185,7 +187,7 @@ class FullHouseScoringRule(ConstantPatternScoringRule):
         """Method to check that the desired pattern
         is present in the given dice.
         Validates if a full house (m-of-a-kind and n-of-a-kind, m > n) is present."""
-        return vl._validate_full_house(
+        return vl.validate_full_house(
             dice=dice,
             large_n=self.large_n,
             small_n=self.small_n
@@ -206,7 +208,7 @@ class LargeStraightScoringRule(ConstantPatternScoringRule):
         """Method to check that the desired pattern
         is present in the given dice.
         Validates if a large straight (5 consecutive values in 5 dice) is present."""
-        return vl._validate_large_straight(dice=dice)
+        return vl.validate_large_straight(dice=dice)
 
 
 class SmallStraightScoringRule(ConstantPatternScoringRule):
@@ -223,7 +225,7 @@ class SmallStraightScoringRule(ConstantPatternScoringRule):
         """Method to check that the desired pattern
         is present in the given dice.
         Validates if a small straight (4 consecutive values in 5 dice) is present."""
-        return vl._validate_small_straight(dice=dice)
+        return vl.validate_small_straight(dice=dice)
 
 
 def _sum_all_showing_faces(dice: DiceList) -> int:
@@ -233,7 +235,7 @@ def _sum_all_showing_faces(dice: DiceList) -> int:
 
 def _sum_matching_faces(dice: DiceList, face_value: int) -> int:
     """Sums all the showing faces which match a given value, for a set of dice."""
-    matching_dice = vl._find_matching_dice(dice=dice, face_value=face_value)
+    matching_dice = vl.find_matching_dice(dice=dice, face_value=face_value)
     return _sum_all_showing_faces(dice=matching_dice)
 
 
