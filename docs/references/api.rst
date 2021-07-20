@@ -10,7 +10,7 @@ Yahtzee
     :inherited-members:
     :show-inheritance:
 
-PLayers
+Players
 -------
 
 .. automodule:: yahtzee.players
@@ -40,6 +40,15 @@ Scoresheet
 ----------
 
 .. automodule:: yahtzee.scoring.scoresheet
+    :members:
+    :undoc-members:
+    :inherited-members:
+    :show-inheritance:
+
+Validators
+----------
+
+.. automodule:: yahtzee.scoring.validators
     :members:
     :undoc-members:
     :inherited-members:
