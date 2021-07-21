@@ -7,7 +7,6 @@ Yahtzee
 .. automodule:: yahtzee.yahtzee
     :members:
     :undoc-members:
-    :inherited-members:
     :show-inheritance:
 
 Players
@@ -16,7 +15,6 @@ Players
 .. automodule:: yahtzee.players
     :members:
     :undoc-members:
-    :inherited-members:
     :show-inheritance:
 
 Dice
@@ -24,7 +22,6 @@ Dice
 .. automodule:: yahtzee.dice
     :members:
     :undoc-members:
-    :inherited-members:
     :show-inheritance:
 
 Rules
@@ -33,7 +30,6 @@ Rules
 .. automodule:: yahtzee.scoring.rules
     :members:
     :undoc-members:
-    :inherited-members:
     :show-inheritance:
 
 Scoresheet
@@ -42,7 +38,6 @@ Scoresheet
 .. automodule:: yahtzee.scoring.scoresheet
     :members:
     :undoc-members:
-    :inherited-members:
     :show-inheritance:
 
 Validators
@@ -51,7 +46,6 @@ Validators
 .. automodule:: yahtzee.scoring.validators
     :members:
     :undoc-members:
-    :inherited-members:
     :show-inheritance:
 
 Errors
@@ -60,5 +54,4 @@ Errors
 .. automodule:: yahtzee.errors
     :members:
     :undoc-members:
-    :inherited-members:
     :show-inheritance:
