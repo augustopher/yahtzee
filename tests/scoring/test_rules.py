@@ -1,5 +1,6 @@
 import yahtzee.scoring.rules as rl
 from yahtzee.dice import Die
+import yahtzee.errors as er
 
 import pytest
 
@@ -222,7 +223,7 @@ def test_scoring_rules_already_scored_error(rule):
     raises the appropriate error."""
     dice = [Die(sides=6) for _ in range(5)]
     rule.score(dice=dice)
-    with pytest.raises(rl.RuleAlreadyScoredError, match=r"Rule.*"):
+    with pytest.raises(er.RuleAlreadyScoredError, match=r"Rule.*"):
         rule.score(dice=dice)
 
 
@@ -361,5 +362,5 @@ def test_scoring_bonuses_already_scored_error(bonus):
     raises the appropriate error."""
     bonus.increment()
     bonus.score()
-    with pytest.raises(rl.RuleAlreadyScoredError, match=r"Rule.*"):
+    with pytest.raises(er.RuleAlreadyScoredError, match=r"Rule.*"):
         bonus.score()
