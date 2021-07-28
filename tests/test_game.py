@@ -1,4 +1,4 @@
-from yahtzee.yahtzee import Game
+from yahtzee.game import Game
 from yahtzee.players import Player
 from yahtzee.dice import Die
 import yahtzee.scoring.rules as rl
