@@ -20,6 +20,7 @@ class Game:
     rules : list of ScoringRule, optional
         A set of scoring rules to use in the game.
         If not specified, defaults to the usual set of Yahtzee rules:
+
         - Aces (Ones): sum of all 1s
         - Twos: sum of all 2s
         - Threes: sum of all 3s
@@ -33,16 +34,18 @@ class Game:
         - Large Straight (five dice sequence): 40 points
         - Yahtzee (Five-of-a-Kind): 50 points
         - Chance (any five dice): total of all dice
+
     bonuses : list of BonusRule, optional
         A set of bonus rules to use in the game.
         If not specified, defaults to the usual bonus rules:
-        - Upper Section Bonus: 35 points if upper section score (Aces through Sixes)
-            is at least 63
+
+        - Upper Section Bonus: 35 points if the upper section score is at least 63
+
     yahtzee_bonus : YahtzeeBonusRule, optional
         A bonus rule for scoring the Yahtzee bonus in the game.
         If not specified, defaults to the usual Yahtzee bonus rule:
-        - Yahtzee Bonus: 100 points per additional Yahtzee,
-            if the Yahtzee rules has already been scored with non-zero points.
+
+        - Yahtzee Bonus: 100 points per additional Yahtzee
 
     Attributes
     ----------
