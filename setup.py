@@ -1,6 +1,6 @@
 from setuptools import setup
 
-install_requires = ["tabulate"]
+install_requires = ["tabulate", "simple_term_menu"]
 test_requires = ["pytest", "pytest-mock", "pytest-cov"]
 docs_requires = ["sphinx", "myst-parser", "sphinx-rtd-theme"]
 typecheck_requires = ["mypy", "types-tabulate"]
