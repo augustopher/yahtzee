@@ -72,6 +72,6 @@ def test_player_roll_dice(monkeypatch):
 
     monkeypatch.setattr(Die, "_roll_die", lambda n: 2)
 
-    player.roll_dice(dice=list(range(1, 6)))
+    player.roll_dice(dice=list(range(5)))
 
     assert [die.showing_face for die in player.dice] == [2 for _ in range(5)]

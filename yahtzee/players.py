@@ -67,5 +67,5 @@ class Player:
             in the CLI output.
         """
         for idx in dice:
-            self.dice[idx - 1].roll()
+            self.dice[idx].roll()
         return None

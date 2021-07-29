@@ -4,7 +4,10 @@ from .scoring.scoresheet import Scoresheet
 from .players import Player
 from .dice import Die
 
-from typing import List, Optional
+from copy import deepcopy
+from typing import List, Optional, Tuple
+
+from simple_term_menu import TerminalMenu  # type: ignore
 
 
 class Game:
@@ -85,6 +88,54 @@ class Game:
             yahtzee_bonus=self.yahtzee_bonus
         )
         self.players = [
-            Player(scoresheet=self.scoresheet, dice=self.dice)
+            Player(scoresheet=deepcopy(self.scoresheet), dice=deepcopy(self.dice))
             for _ in range(players)
         ]
+
+    def reroll_dice(self, player: Player) -> None:
+        """Rerolls a subset of the player's dice, based on user input.
+
+        Parameters
+        ----------
+        player : Player
+            Which player is currently rolling.
+        """
+        dice_to_reroll = _pick_reroll_dice(dice=player.dice)
+
+        # if no dice are selected, the index should be out-of-range
+        if max(dice_to_reroll) < len(player.dice):
+            player.roll_dice(dice=dice_to_reroll)
+
+        return None
+
+
+def _pick_reroll_dice(dice: List[Die]) -> List[int]:
+    """Gets user input for which dice to re-roll.
+
+    Parameters
+    ----------
+    dice : list of Die
+        The set of dice to choose from.
+
+    Returns
+    -------
+    dice : list of int
+        Indexes of dice to re-roll.
+        If no dice are selected, returns an index that is out-of-bounds for
+        the dice list.
+    """
+    dice_choices = [str(die.showing_face) for die in dice]
+    dice_choices = dice_choices + ["None"]
+
+    dice_menu = TerminalMenu(
+        dice_choices,
+        title="Pick which dice to re-roll (if any).",
+        multi_select=True,
+        show_multi_select_hint=True,
+        multi_select_select_on_accept=False,
+        cursor_index=len(dice_choices),
+    )
+
+    selected_indexes: Tuple[int] = dice_menu.show()
+
+    return list(selected_indexes)
