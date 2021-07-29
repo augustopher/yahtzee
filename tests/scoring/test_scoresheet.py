@@ -46,22 +46,6 @@ def test_scoresheet_init_dupe_rules_error(rules, bonuses):
         )
 
 
-def test_get_name_from_index():
-    """Checks that the correct rule name is retrieved by index."""
-    rules = [
-        rl.ChanceScoringRule(name="rule1"),
-        rl.ChanceScoringRule(name="rule2"),
-    ]
-    bonuses = [rl.CountBonusRule(name="bonus1")]
-    yahtzee_bonus = rl.YahtzeeBonusRule(
-        name="yahtzee",
-        yahtzee_rule=rl.YahtzeeScoringRule(name="name1")
-    )
-    sheet = Scoresheet(rules=rules, bonuses=bonuses, yahtzee_bonus=yahtzee_bonus)
-    result = sheet._get_name_from_index(index=1)
-    assert result == rules[0].name
-
-
 def test_get_rule_from_name():
     """Checks that the correct rule is retrieved by name."""
     rules = [
@@ -93,34 +77,7 @@ def test_update_score():
 
     sheet = Scoresheet(rules=rules, bonuses=bonuses, yahtzee_bonus=yahtzee_bonus)
 
-    sheet.update_score(index=1, dice=dice)
-
-    expected_scores = {
-        0: 3,
-        1: None,
-    }
-
-    assert all([
-        rule.rule_score == expected_scores[idx] for idx, rule in enumerate(rules)
-    ])
-
-
-def test_update_rule_score():
-    """Check that a rule's score is updated properly from a requested index."""
-    rules = [
-        rl.ChanceScoringRule(name="rule1"),
-        rl.ChanceScoringRule(name="rule2"),
-    ]
-    bonuses = [rl.CountBonusRule(name="bonus1")]
-    yahtzee_bonus = rl.YahtzeeBonusRule(
-        name="yahtzee",
-        yahtzee_rule=rl.YahtzeeScoringRule(name="name1")
-    )
-    dice = [Die(starting_face=1), Die(starting_face=2)]
-
-    sheet = Scoresheet(rules=rules, bonuses=bonuses, yahtzee_bonus=yahtzee_bonus)
-
-    sheet._update_rule_score(name="rule1", dice=dice)
+    sheet.update_score(name="rule1", dice=dice)
 
     expected_scores = {
         "rule1": 3,
@@ -185,9 +142,9 @@ def test_get_section_subtotal_score(section, expected):
     sheet = Scoresheet(rules=rules, bonuses=bonuses, yahtzee_bonus=yahtzee_bonus)
 
     # set score for rule1 to 5
-    sheet._update_rule_score(name="rule1", dice=[Die(sides=6, starting_face=5)])
+    sheet.update_score(name="rule1", dice=[Die(sides=6, starting_face=5)])
     # set score for rule3 to 10
-    sheet._update_rule_score(
+    sheet.update_score(
         name="rule3",
         dice=[Die(sides=6, starting_face=5), Die(sides=6, starting_face=5)]
     )

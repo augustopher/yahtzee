@@ -28,8 +28,6 @@ class Scoresheet:
         Bonuses to include on the sheet
     yahtzee_bonus : YahtzeeBonusRule
         Bonus rule for additional Yahtzees to include on the sheet.
-    rules_map : dict of int, ScoringRule
-        Mapping of display number to rule, to help with user selections in the CLI.
     """
     def __init__(
         self,
@@ -43,7 +41,6 @@ class Scoresheet:
             yahtzee_bonus=yahtzee_bonus
         )
         self.rules = rules
-        self.rules_map = {idx + 1: rule.name for idx, rule in enumerate(rules)}
         self.bonuses = bonuses
         self.yahtzee_bonus = yahtzee_bonus
 
@@ -80,23 +77,7 @@ class Scoresheet:
             )
         return None
 
-    def update_score(self, index: int, dice: DiceList) -> None:
-        """Updates the score for a rule, chosen by user input,
-        based on the given dice. Also updates any associated bonus rules.
-
-        Parameters
-        ----------
-        index : int
-            Index of rule to update, from the user input via CLI.
-        dice : list of Die
-            Set of dice to score.
-        """
-        rule_name = self._get_name_from_index(index=index)
-        self._update_rule_score(name=rule_name, dice=dice)
-        self._update_dep_bonuses(name=rule_name)
-        return None
-
-    def _update_rule_score(self, name: str, dice: DiceList) -> None:
+    def update_score(self, name: str, dice: DiceList) -> None:
         """Updates the score for a rule, from a rule name,
         based on the given dice.
 
@@ -143,21 +124,6 @@ class Scoresheet:
         """
         return next(rule for rule in self.rules if rule.name == name)
 
-    def _get_name_from_index(self, index: int) -> str:
-        """Helper to retrieve the rule name from the user-input index.
-
-        Parameters
-        ----------
-        index : int
-            Index of rule to retrieve,  from the user input via CLI.
-
-        Returns
-        -------
-        name : str
-            Name of the requested rule.
-        """
-        return self.rules_map[index]
-
     def _get_section_subtotal_score(self, section: rl.Section) -> int:
         """Calculates the total score for a section, before bonuses.
 
@@ -199,7 +165,7 @@ class Scoresheet:
         scores_header : list of str
             The header for a set of rules on the scoresheet.
         """
-        scores_header = ["Rule", "Name", "Scored"]
+        scores_header = ["Rule", "Scored"]
         return scores_header
 
     @staticmethod
@@ -232,9 +198,8 @@ class Scoresheet:
         row : list
             The row for a rule, showing its index (for selection), name, and score.
         """
-        index = next(idx for idx, nm in self.rules_map.items() if nm == name)
         rule = self._get_rule_from_name(name=name)
-        row = [index, name, rule.rule_score]
+        row = [name, rule.rule_score]
         return row
 
     def _generate_section(self, section: rl.Section) -> List[List[Any]]:

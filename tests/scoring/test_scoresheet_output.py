@@ -15,7 +15,7 @@ def test_scoresheet_scores_header():
         )
     )
     result = sheet._generate_scores_header()
-    expected = ["Rule", "Name", "Scored"]
+    expected = ["Rule", "Scored"]
     assert result == expected
 
 
@@ -50,21 +50,21 @@ def test_scoresheet_score_row():
     )
     sheet = Scoresheet(rules=rules, bonuses=bonuses, yahtzee_bonus=yahtzee_bonus)
     results = [sheet._generate_score_row(rule.name) for rule in rules]
-    expected = [[1, "rule1", None], [2, "rule2", None]]
+    expected = [["rule1", None], ["rule2", None]]
     assert results == expected
 
 
 @pytest.mark.parametrize("section, expected", [
     (rl.Section.UPPER, [
         ["Upper Section"],
-        ["Rule", "Name", "Scored"],
-        [1, "rule1", None],
+        ["Rule", "Scored"],
+        ["rule1", None],
     ]),
     (rl.Section.LOWER, [
         ["Lower Section"],
-        ["Rule", "Name", "Scored"],
-        [2, "rule2", None],
-        [3, "rule3", None],
+        ["Rule", "Scored"],
+        ["rule2", None],
+        ["rule3", None],
     ]),
 ])
 def test_scoresheet_section(section, expected):
@@ -100,12 +100,12 @@ def test_scoresheet_scoresheet():
     result = sheet._generate_scoresheet()
     expected = [
         ["Upper Section"],
-        ["Rule", "Name", "Scored"],
-        [1, "rule1", None],
+        ["Rule", "Scored"],
+        ["rule1", None],
         ["Lower Section"],
-        ["Rule", "Name", "Scored"],
-        [2, "rule2", None],
-        [3, "rule3", None],
+        ["Rule", "Scored"],
+        ["rule2", None],
+        ["rule3", None],
     ]
     assert result == expected
 
@@ -125,9 +125,14 @@ def test_scoresheet_output():
     sheet = Scoresheet(rules=rules, bonuses=bonuses, yahtzee_bonus=yahtzee_bonus)
     result = sheet.output()
     expected = (
-        "-------------  -----  ------\nUpper Section\nRule           "
-        "Name   Scored\n1              rule1\nLower Section\nRule           Name   "
-        "Scored\n2              rule2\n3              rule3\n-------------  -----  "
-        "------"
+        "-------------  ------\n"
+        "Upper Section\n"
+        "Rule           Scored\n"
+        "rule1\n"
+        "Lower Section\n"
+        "Rule           Scored\n"
+        "rule2\n"
+        "rule3\n"
+        "-------------  ------"
     )
     assert result == expected
