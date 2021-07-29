@@ -9,7 +9,7 @@ class Die:
 
     Parameters
     ----------
-    sides : int
+    sides : int, default 6
         Number of sides the die should have.
         This will set `faces` as [1, ..., n].
     starting_face : int, optional

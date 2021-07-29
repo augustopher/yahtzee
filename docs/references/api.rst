@@ -1,10 +1,10 @@
 Yahtzee: Public API Reference
 =============================
 
-Yahtzee
+Game
 -------
 
-.. automodule:: yahtzee.yahtzee
+.. automodule:: yahtzee.game
     :members:
     :undoc-members:
     :show-inheritance:
