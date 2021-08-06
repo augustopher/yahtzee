@@ -62,10 +62,19 @@ class Player:
         Parameters
         ----------
         dice : list of int
-            Which dice the player should roll,
-            expressed as the integers shown to the player
-            in the CLI output.
+            Indexes of which dice to roll.
         """
         for idx in dice:
             self.dice[idx].roll()
+        return None
+
+    def score_rule(self, rule_name: str) -> None:
+        """Updates the score for a given rule, based on the current dice values.
+
+        Parameters
+        ----------
+        rule_name : str
+            Name of the rule to score.
+        """
+        self.scoresheet.update_score(name=rule_name, dice=self.dice)
         return None

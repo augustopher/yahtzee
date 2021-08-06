@@ -75,3 +75,27 @@ def test_player_roll_dice(monkeypatch):
     player.roll_dice(dice=list(range(5)))
 
     assert [die.showing_face for die in player.dice] == [2 for _ in range(5)]
+
+
+def test_player_score_rule():
+    """Checks that the appropriate rule is updated with the expected score."""
+    sheet = Scoresheet(
+        rules=[
+            rl.ChanceScoringRule(name="rule1"),
+            rl.ChanceScoringRule(name="rule2"),
+        ],
+        bonuses=[rl.CountBonusRule(name="bonus1")],
+        yahtzee_bonus=rl.YahtzeeBonusRule(
+            name="yahtzee",
+            yahtzee_rule=rl.YahtzeeScoringRule(name="name1")
+        )
+    )
+
+    dice = [Die(starting_face=5) for _ in range(5)]
+
+    player = Player(scoresheet=sheet, dice=dice)
+
+    player.score_rule(rule_name="rule1")
+
+    assert player.scoresheet.rules[0].rule_score == 25
+    assert player.scoresheet.rules[1].rule_score is None

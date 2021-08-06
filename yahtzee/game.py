@@ -98,13 +98,32 @@ class Game:
         Parameters
         ----------
         player : Player
-            Which player is currently rolling.
+            Which player is currently active.
         """
         dice_to_reroll = _pick_reroll_dice(dice=player.dice)
 
         # if no dice are selected, the index should be out-of-range
         if max(dice_to_reroll) < len(player.dice):
             player.roll_dice(dice=dice_to_reroll)
+
+        return None
+
+    def score_rule(self, player: Player) -> None:
+        """Scores a rule based on the player's dice, based on user input.
+
+        Parameters
+        ----------
+        player : Player
+            Which player is currently active.
+        """
+        available_rules = [
+            rule for rule in player.scoresheet.rules
+            if rule.rule_score is None
+        ]
+
+        rule_to_score = _pick_rule_to_score(rules=available_rules, dice=player.dice)
+
+        player.score_rule(rule_name=rule_to_score)
 
         return None
 
@@ -139,3 +158,31 @@ def _pick_reroll_dice(dice: List[Die]) -> List[int]:
     selected_indexes: Tuple[int] = dice_menu.show()
 
     return list(selected_indexes)
+
+
+def _pick_rule_to_score(rules: List[rl.ScoringRule], dice: List[Die]) -> str:
+    """Gets the user input for which rule to score for the given set of dice.
+
+    Parameters
+    ----------
+    rules : list of ScoringRule
+        The rules available to score.
+    dice : list of Die
+        The dice set to use for scoring.
+
+    Returns
+    -------
+    rule : int
+        Name of the rule to score.
+    """
+    rule_choices = [rule.name for rule in rules]
+
+    dice_faces = [str(die.showing_face) for die in dice]
+    dice_faces = sorted(dice_faces)
+    menu_title = f"Pick which rule to score for the dice: {','.join(dice_faces)}."
+
+    rule_menu = TerminalMenu(rule_choices, title=menu_title)
+
+    selected_index: int = rule_menu.show()
+
+    return rule_choices[selected_index]

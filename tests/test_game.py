@@ -65,6 +65,23 @@ def test_reroll_dice(monkeypatch, choices, expected):
     assert [die.showing_face for die in game.players[1].dice] == starting_faces
 
 
+def test_game_score_rule(monkeypatch):
+    """Check the correct rule is scored for the correct player."""
+    rules = [rl.ChanceScoringRule(name="name1"), rl.ChanceScoringRule(name="name2")]
+    game = gm.Game(players=2, rules=rules)
+
+    monkeypatch.setattr("yahtzee.game._pick_rule_to_score", lambda rules, dice: "name1")
+
+    game.score_rule(player=game.players[0])
+
+    assert game.players[0].scoresheet.rules[0].rule_score > 0
+    assert game.players[0].scoresheet.rules[1].rule_score is None
+    assert all([
+        rule.rule_score is None
+        for rule in game.players[1].scoresheet.rules
+    ])
+
+
 @pytest.mark.parametrize("selected", [
     (1,),
     (2,),
@@ -100,3 +117,37 @@ def test_pick_reroll_dice(monkeypatch, selected):
     result = gm._pick_reroll_dice(dice=dice)
 
     assert sorted(result) == sorted(list(selected))
+
+
+@pytest.mark.parametrize("selected", range(3))
+def test_pick_rule_to_score(monkeypatch, selected):
+    """Check that rules are selected correctly from user input."""
+    rules = [
+        rl.ChanceScoringRule(name="rule1"),
+        rl.ChanceScoringRule(name="rule2"),
+        rl.ChanceScoringRule(name="rule3"),
+    ]
+
+    dice = [Die() for _ in range(5)]
+
+    # Mocking TerminalMenu reduces the usefulness of this test,
+    # but just mocking TermainalMenu.show() fails on some systems
+    # because of errors thrown during TermainalMenu.__init__().
+    # Not sure of the exact cause, and I can get the mocked
+    # TerminalMenu.show() to work fine on my system, but this
+    # at least tests the conversion from the TerminalMenu.show()
+    # output tuple to the desired list, if nothing else.
+    class MockTerminalMenu:
+        def __init__(self, *args, **kwargs):
+            pass
+
+        def show(self):
+            return selected
+
+    monkeypatch.setattr(
+        "yahtzee.game.TerminalMenu",
+        lambda *args, **kwargs: MockTerminalMenu()
+    )
+    result = gm._pick_rule_to_score(rules=rules, dice=dice)
+
+    assert result == rules[selected].name

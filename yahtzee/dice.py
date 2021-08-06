@@ -1,7 +1,7 @@
 from . import errors as er
 
 import random
-from typing import Optional, List
+from typing import Optional, Sequence
 
 
 class Die:
@@ -59,4 +59,4 @@ class Die:
         return random.choice(self.faces)
 
 
-DiceList = List[Optional[Die]]
+DiceList = Sequence[Optional[Die]]
