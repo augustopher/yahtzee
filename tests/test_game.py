@@ -46,7 +46,7 @@ def test_game_init():
 
 @pytest.mark.parametrize("choices, expected", [
     ([2], [1, 2, 2]),
-    ([3], [1, 2, 3]),
+    (None, [1, 2, 3]),
     ([0, 2], [2, 2, 2]),
 ])
 def test_reroll_dice(monkeypatch, choices, expected):
@@ -83,40 +83,38 @@ def test_game_score_rule(monkeypatch):
 
 
 @pytest.mark.parametrize("selected", [
+    (0,),
     (1,),
     (2,),
-    (3,),
+    (0, 1),
+    (0, 2),
     (1, 2),
-    (1, 3),
-    (2, 3),
-    (1, 2, 3),
-    (4,),
+    (0, 1, 2),
 ])
 def test_pick_reroll_dice(monkeypatch, selected):
     """Check that dice are selected correctly."""
     dice = [Die() for _ in range(3)]
 
-    # Mocking TerminalMenu reduces the usefulness of this test,
-    # but just mocking TermainalMenu.show() fails on some systems
-    # because of errors thrown during TermainalMenu.__init__().
-    # Not sure of the exact cause, and I can get the mocked
-    # TerminalMenu.show() to work fine on my system, but this
-    # at least tests the conversion from the TerminalMenu.show()
-    # output tuple to the desired list, if nothing else.
-    class MockTerminalMenu:
-        def __init__(self, *args, **kwargs):
-            pass
-
-        def show(self):
-            return selected
-
     monkeypatch.setattr(
-        "yahtzee.game.TerminalMenu",
-        lambda *args, **kwargs: MockTerminalMenu()
+        "yahtzee.game.mutliple_choice_from_menu",
+        lambda **kwargs: selected
     )
     result = gm._pick_reroll_dice(dice=dice)
 
     assert sorted(result) == sorted(list(selected))
+
+
+def test_pick_reroll_dice_none(monkeypatch):
+    """Check that None is returned when no dice are selected."""
+    dice = [Die() for _ in range(3)]
+
+    monkeypatch.setattr(
+        "yahtzee.game.mutliple_choice_from_menu",
+        lambda **kwargs: (3,)
+    )
+    result = gm._pick_reroll_dice(dice=dice)
+
+    assert result is None
 
 
 @pytest.mark.parametrize("selected", range(3))
@@ -130,23 +128,9 @@ def test_pick_rule_to_score(monkeypatch, selected):
 
     dice = [Die() for _ in range(5)]
 
-    # Mocking TerminalMenu reduces the usefulness of this test,
-    # but just mocking TermainalMenu.show() fails on some systems
-    # because of errors thrown during TermainalMenu.__init__().
-    # Not sure of the exact cause, and I can get the mocked
-    # TerminalMenu.show() to work fine on my system, but this
-    # at least tests the conversion from the TerminalMenu.show()
-    # output tuple to the desired list, if nothing else.
-    class MockTerminalMenu:
-        def __init__(self, *args, **kwargs):
-            pass
-
-        def show(self):
-            return selected
-
     monkeypatch.setattr(
-        "yahtzee.game.TerminalMenu",
-        lambda *args, **kwargs: MockTerminalMenu()
+        "yahtzee.game.single_choice_from_menu",
+        lambda **kwargs: selected
     )
     result = gm._pick_rule_to_score(rules=rules, dice=dice)
 

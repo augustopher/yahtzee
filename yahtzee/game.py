@@ -3,11 +3,10 @@ from .scoring import rules as rl
 from .scoring.scoresheet import Scoresheet
 from .players import Player
 from .dice import Die
+from .terminal import single_choice_from_menu, mutliple_choice_from_menu
 
 from copy import deepcopy
-from typing import List, Optional, Tuple
-
-from simple_term_menu import TerminalMenu  # type: ignore
+from typing import List, Optional
 
 
 class Game:
@@ -102,8 +101,7 @@ class Game:
         """
         dice_to_reroll = _pick_reroll_dice(dice=player.dice)
 
-        # if no dice are selected, the index should be out-of-range
-        if max(dice_to_reroll) < len(player.dice):
+        if dice_to_reroll:
             player.roll_dice(dice=dice_to_reroll)
 
         return None
@@ -128,7 +126,7 @@ class Game:
         return None
 
 
-def _pick_reroll_dice(dice: List[Die]) -> List[int]:
+def _pick_reroll_dice(dice: List[Die]) -> Optional[List[int]]:
     """Gets user input for which dice to re-roll.
 
     Parameters
@@ -146,18 +144,16 @@ def _pick_reroll_dice(dice: List[Die]) -> List[int]:
     dice_choices = [str(die.showing_face) for die in dice]
     dice_choices = dice_choices + ["None"]
 
-    dice_menu = TerminalMenu(
-        dice_choices,
+    selected_indexes = mutliple_choice_from_menu(
+        choices=dice_choices,
         title="Pick which dice to re-roll (if any).",
-        multi_select=True,
-        show_multi_select_hint=True,
-        multi_select_select_on_accept=False,
-        cursor_index=len(dice_choices),
+        cursor_end=True,
     )
 
-    selected_indexes: Tuple[int] = dice_menu.show()
-
-    return list(selected_indexes)
+    if any([dice_choices[c] == "None" for c in selected_indexes]):
+        return None
+    else:
+        return list(selected_indexes)
 
 
 def _pick_rule_to_score(rules: List[rl.ScoringRule], dice: List[Die]) -> str:
@@ -181,8 +177,6 @@ def _pick_rule_to_score(rules: List[rl.ScoringRule], dice: List[Die]) -> str:
     dice_faces = sorted(dice_faces)
     menu_title = f"Pick which rule to score for the dice: {','.join(dice_faces)}."
 
-    rule_menu = TerminalMenu(rule_choices, title=menu_title)
-
-    selected_index: int = rule_menu.show()
+    selected_index = single_choice_from_menu(choices=rule_choices, title=menu_title)
 
     return rule_choices[selected_index]
