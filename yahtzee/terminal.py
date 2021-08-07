@@ -1,11 +1,11 @@
-from typing import List, Tuple
+from typing import List, Tuple, Optional
 
 from simple_term_menu import TerminalMenu  # type: ignore
 
 
 def single_choice_from_menu(
     choices: List[str],
-    title: str = "Pick one from:",
+    title: Optional[str] = None,
 ) -> int:
     """Presents the user with a menu and returns the index of the user's choice.
 
@@ -13,7 +13,7 @@ def single_choice_from_menu(
     ----------
     choices : list of str
         The choices to present to the user.
-    title : str, default "Pick one from:"
+    title : str, optional
         The title to show for the menu.
 
     Returns
@@ -29,7 +29,7 @@ def single_choice_from_menu(
 
 def mutliple_choice_from_menu(
     choices: List[str],
-    title: str = "Pick any number of the following:",
+    title: Optional[str] = None,
     cursor_end: bool = True,
 ) -> Tuple[int]:
     """Presents the user with a menu and returns the index of the user's choices.
@@ -38,7 +38,7 @@ def mutliple_choice_from_menu(
     ----------
     choices : list of str
         The choices to present to the user.
-    title : str, default "Pick any number of the following:"
+    title : str, optional
         The title to show for the menu.
     cursor_end : bool, default True
         Whether to start the cursor at the end of the list.
