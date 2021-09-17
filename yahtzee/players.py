@@ -66,7 +66,6 @@ class Player:
         """
         for idx in dice:
             self.dice[idx].roll()
-        return None
 
     def score_rule(self, rule_name: str) -> None:
         """Updates the score for a given rule, based on the current dice values.
@@ -77,4 +76,3 @@ class Player:
             Name of the rule to score.
         """
         self.scoresheet.update_score(name=rule_name, dice=self.dice)
-        return None

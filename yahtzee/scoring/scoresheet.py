@@ -75,7 +75,6 @@ class Scoresheet:
                 f"Rules cannot share names. Duplicate names are: "
                 f"{duplicate_names}."
             )
-        return None
 
     def update_score(self, name: str, dice: DiceList) -> None:
         """Updates the score for a rule, from a rule name,
@@ -90,7 +89,6 @@ class Scoresheet:
         """
         rule = self._get_rule_from_name(name=name)
         rule.score(dice=dice)
-        return None
 
     def _update_dep_bonuses(self, name: str) -> None:
         """Increments the counters for any bonuses which are dependent
@@ -107,7 +105,6 @@ class Scoresheet:
                 # placate mypy
                 rule_amt = cast(int, rule.rule_score)
                 bonus.increment(amt=rule_amt)
-        return None
 
     def _get_rule_from_name(self, name: str) -> rl.ScoringRule:
         """Helper to retrieve the rule from its name.
@@ -154,7 +151,6 @@ class Scoresheet:
             Amount of additional Yahtzees to add to the `yahtzee_bonus`.
         """
         self.yahtzee_bonus.increment(amt=amt)
-        return None
 
     @staticmethod
     def _generate_scores_header() -> List[str]:

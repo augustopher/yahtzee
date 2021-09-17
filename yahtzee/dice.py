@@ -45,7 +45,6 @@ class Die:
     def roll(self) -> None:
         """Rolls the die, updating the showing face."""
         self.showing_face = self._roll_die()
-        return None
 
     def _roll_die(self) -> int:
         """

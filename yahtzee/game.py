@@ -104,8 +104,6 @@ class Game:
         if dice_to_reroll:
             player.roll_dice(dice=dice_to_reroll)
 
-        return None
-
     def score_rule(self, player: Player) -> None:
         """Scores a rule based on the player's dice, based on user input.
 
@@ -122,8 +120,6 @@ class Game:
         rule_to_score = _pick_rule_to_score(rules=available_rules, dice=player.dice)
 
         player.score_rule(rule_name=rule_to_score)
-
-        return None
 
 
 def _pick_reroll_dice(dice: List[Die]) -> Optional[List[int]]:
@@ -152,8 +148,8 @@ def _pick_reroll_dice(dice: List[Die]) -> Optional[List[int]]:
 
     if any([dice_choices[c] == "None" for c in selected_indexes]):
         return None
-    else:
-        return list(selected_indexes)
+
+    return list(selected_indexes)
 
 
 def _pick_rule_to_score(rules: List[rl.ScoringRule], dice: List[Die]) -> str:

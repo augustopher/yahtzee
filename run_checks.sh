@@ -55,8 +55,8 @@ fi
 if [ $RUN_VER -gt 0 ]; then
         echo "Checking versions across all files..."
         VER_PATTERN="\d+\.\d+\.\d+([-_][a-zA-z]*)?"
-        VER_SETUP=`grep "version=" setup.py | grep -Eo $VER_PATTERN`
-        VER_DOCS=`grep "release =" docs/conf.py | grep -Eo $VER_PATTERN`
+				VER_SETUP=$(grep "version=" setup.py | grep -Eo $VER_PATTERN)
+        VER_DOCS=$(grep "release =" docs/conf.py | grep -Eo $VER_PATTERN)
         if [ "$VER_SETUP" != "$VER_DOCS" ]; then
                 echo "Versions don't match."
                 echo "setup.py at $VER_SETUP, docs/conf.py at $VER_DOCS"
@@ -67,9 +67,8 @@ fi
 
 if [ $RUN_LINT -gt 0 ]; then
 	echo "Lint check with flake8..."
-	flake8 yahtzee tests
 	# flake8 doesn't provide feedback when no issues are found
-	if [ $? -eq 0 ]; then
+	if flake8 yahtzee tests; then
 		echo "flake8 found no issues."
 	else
 		exit 1
@@ -78,16 +77,14 @@ fi
 
 if [ $RUN_TYPE -gt 0 ]; then
 	echo "Type check with mypy..."
-	mypy yahtzee
-	if [ $? -ne 0 ]; then
+	if ! mypy yahtzee; then
 		exit 1
 	fi
 fi
 
 if [ $RUN_TEST -gt 0 ]; then
 	echo "Run tests with pytest..."
-	pytest
-	if [ $? -ne 0 ]; then
+	if ! pytest; then
 		exit 1
 	fi
 fi

@@ -64,7 +64,6 @@ class ScoringRule(ABC):
             raise er.RuleAlreadyScoredError(
                 f"Rule {self.name} has already been scored."
             )
-        return None
 
     @abstractmethod
     def validate(self, dice: DiceList) -> bool:
@@ -81,7 +80,6 @@ class ScoringRule(ABC):
         valid_dice : bool
             Whether the dice are valid for the given rule or not.
         """
-        pass  # pragma: no cover
 
     @abstractmethod
     def _score_dice(self, dice: DiceList) -> int:
@@ -97,7 +95,6 @@ class ScoringRule(ABC):
         score : int
             The score resulting from the dice, based on the rule.
         """
-        pass  # pragma: no cover
 
     def _check_rule_not_scored(self) -> bool:
         """Verifies that the rule has not already been scored.
@@ -155,8 +152,7 @@ class ConstantPatternScoringRule(ScoringRule):
         """
         if self.validate(dice=dice):
             return self.score_value
-        else:
-            return 0
+        return 0
 
 
 class VariablePatternScoringRule(ScoringRule):
@@ -198,8 +194,7 @@ class VariablePatternScoringRule(ScoringRule):
         """
         if self.validate(dice=dice):
             return self._scoring_func(dice=dice)
-        else:
-            return 0
+        return 0
 
     @abstractmethod
     def _scoring_func(self, dice: DiceList) -> int:
@@ -215,7 +210,6 @@ class VariablePatternScoringRule(ScoringRule):
         score : int
             The score resulting from the dice, based on the rule.
         """
-        pass  # pragma: no cover
 
 
 class ChanceScoringRule(VariablePatternScoringRule):
@@ -728,7 +722,6 @@ class BonusRule(ABC):
             Amount by which to increment `counter`.
         """
         self.counter += amt
-        return None
 
     def score(self) -> None:
         """Method to score a given bonus, and update the associated score value.
@@ -744,7 +737,6 @@ class BonusRule(ABC):
             raise er.RuleAlreadyScoredError(
                 f"Rule {self.name} has already been scored."
             )
-        return None
 
     @abstractmethod
     def _score_bonus(self) -> int:
@@ -755,7 +747,6 @@ class BonusRule(ABC):
         score_value : int
             Score returned from the bonus scoring logic.
         """
-        pass  # pragma: no cover
 
     def _check_rule_not_scored(self) -> bool:
         """Verifies that the rule has not already been scored.
@@ -840,8 +831,8 @@ class ThresholdBonusRule(BonusRule):
         """
         if self.counter >= self.threshold:
             return self.bonus_value
-        else:
-            return 0
+
+        return 0
 
 
 class CountBonusRule(BonusRule):
