@@ -4,7 +4,7 @@ install_requires = ["tabulate", "simple_term_menu"]
 test_requires = ["pytest", "pytest-mock", "pytest-cov"]
 docs_requires = ["sphinx", "myst-parser", "sphinx-rtd-theme"]
 typecheck_requires = ["mypy", "types-tabulate"]
-lint_requires = ["flake8"]
+lint_requires = ["flake8", "interrogate"]
 
 setup(
     name="yahtzee",

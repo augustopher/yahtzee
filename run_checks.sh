@@ -3,7 +3,7 @@
 usage() {
 	echo "usage: ./run_scripts.sh -options"
 	echo "-a  Run all checks"
-	echo "-l  Run lint check (flake8)"
+	echo "-l  Run lint check (flake8, interrogate)"
 	echo "-m  Run type check (mypy)"
 	echo "-t  Run tests (pytest)"
 	echo "-v  Run version check"
@@ -39,6 +39,7 @@ while getopts "almtvh" opt; do
 			;;
 		h)
 			usage
+			exit 0
 			;;
 		*)
 			usage
@@ -67,10 +68,14 @@ fi
 
 if [ $RUN_LINT -gt 0 ]; then
 	echo "Lint check with flake8..."
+	if ! flake8 yahtzee tests; then
+		exit 1
+	fi
 	# flake8 doesn't provide feedback when no issues are found
-	if flake8 yahtzee tests; then
-		echo "flake8 found no issues."
-	else
+	echo "flake8 found no issues."
+
+	echo "Docstring check with interrogate..."
+	if ! interrogate yahtzee; then
 		exit 1
 	fi
 fi

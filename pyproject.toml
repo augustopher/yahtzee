@@ -7,3 +7,9 @@ warn_return_any = true
 warn_unused_configs = true
 disallow_untyped_defs = true
 disallow_untyped_calls = true
+
+[tool.interrogate]
+ignore-module = true
+ignore-init-module = true
+ignore-init-method = true
+verbose = 1
