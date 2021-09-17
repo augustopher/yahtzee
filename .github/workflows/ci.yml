@@ -23,6 +23,7 @@ jobs:
       - name: Run Linting
         run: |
           flake8 yahtzee tests
+          interrogate yahtzee
   typecheck:
     name: Type Checking
     runs-on: ubuntu-latest
