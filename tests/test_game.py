@@ -1,10 +1,10 @@
-import yahtzee.game as gm
-from yahtzee.players import Player
-from yahtzee.dice import Die
-import yahtzee.scoring.rules as rl
-import yahtzee.scoring.defaults as df
-
 import pytest
+
+import yahtzee.game as gm
+import yahtzee.scoring.defaults as df
+import yahtzee.scoring.rules as rl
+from yahtzee.dice import Die
+from yahtzee.players import Player
 
 
 def test_game_init_defaults():

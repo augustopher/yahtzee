@@ -1,12 +1,14 @@
+from copy import deepcopy
+from typing import List
+from typing import Optional
+
+from .dice import Die
+from .players import Player
 from .scoring import defaults as df
 from .scoring import rules as rl
 from .scoring.scoresheet import Scoresheet
-from .players import Player
-from .dice import Die
-from .terminal import single_choice_from_menu, mutliple_choice_from_menu
-
-from copy import deepcopy
-from typing import List, Optional
+from .terminal import mutliple_choice_from_menu
+from .terminal import single_choice_from_menu
 
 
 class Game:

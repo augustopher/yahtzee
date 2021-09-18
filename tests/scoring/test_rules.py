@@ -1,8 +1,8 @@
+import pytest
+
+import yahtzee.errors as er
 import yahtzee.scoring.rules as rl
 from yahtzee.dice import Die
-import yahtzee.errors as er
-
-import pytest
 
 
 @pytest.mark.parametrize("seq, expected", [

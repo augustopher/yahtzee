@@ -1,7 +1,7 @@
+import pytest
+
 from yahtzee.dice import Die
 from yahtzee.errors import IllegalDieValueError
-
-import pytest
 
 
 @pytest.mark.parametrize("sides", list(range(1, 11)))

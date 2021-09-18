@@ -1,7 +1,8 @@
+from typing import List
+from typing import Optional
+
 from .dice import Die
 from .scoring.scoresheet import Scoresheet
-
-from typing import List, Optional
 
 
 class Player:

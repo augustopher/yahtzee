@@ -1,8 +1,8 @@
+import pytest
+
+import yahtzee.errors as er
 import yahtzee.scoring.validators as vl
 from yahtzee.dice import Die
-import yahtzee.errors as er
-
-import pytest
 
 
 @pytest.mark.parametrize("seq, face, expected", [

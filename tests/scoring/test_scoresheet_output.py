@@ -1,7 +1,7 @@
-from yahtzee.scoring.scoresheet import Scoresheet
-import yahtzee.scoring.rules as rl
-
 import pytest
+
+import yahtzee.scoring.rules as rl
+from yahtzee.scoring.scoresheet import Scoresheet
 
 
 def test_scoresheet_scores_header():

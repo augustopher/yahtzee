@@ -1,11 +1,13 @@
-from ..dice import DiceList
+from typing import Any
+from typing import List
+from typing import cast
+
+from tabulate import tabulate
+
 from . import rules as rl
 from . import validators as vl
 from .. import errors as er
-
-from typing import List, Any, cast
-
-from tabulate import tabulate
+from ..dice import DiceList
 
 
 class Scoresheet:

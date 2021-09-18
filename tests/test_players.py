@@ -1,7 +1,7 @@
-from yahtzee.players import Player
-from yahtzee.dice import Die
-from yahtzee.scoring.scoresheet import Scoresheet
 import yahtzee.scoring.rules as rl
+from yahtzee.dice import Die
+from yahtzee.players import Player
+from yahtzee.scoring.scoresheet import Scoresheet
 
 
 def test_player_init_dice():

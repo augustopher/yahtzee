@@ -1,9 +1,9 @@
-from ..dice import DiceList
-from .. import errors as er
-
-from itertools import combinations
 from collections import Counter
+from itertools import combinations
 from typing import List
+
+from .. import errors as er
+from ..dice import DiceList
 
 
 def find_matching_dice(dice: DiceList, face_value: int) -> DiceList:

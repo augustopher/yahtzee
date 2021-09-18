@@ -4,7 +4,7 @@ install_requires = ["tabulate", "simple_term_menu"]
 test_requires = ["pytest", "pytest-mock", "pytest-cov"]
 docs_requires = ["sphinx", "myst-parser", "sphinx-rtd-theme"]
 typecheck_requires = ["mypy", "types-tabulate"]
-lint_requires = ["flake8", "interrogate"]
+lint_requires = ["flake8", "interrogate", "flake8-bugbear", "flake8-import-order"]
 dev_requires = test_requires + docs_requires + typecheck_requires + lint_requires
 
 setup(

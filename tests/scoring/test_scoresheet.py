@@ -1,9 +1,9 @@
-from yahtzee.scoring.scoresheet import Scoresheet
+import pytest
+
+import yahtzee.errors as er
 import yahtzee.scoring.rules as rl
 from yahtzee.dice import Die
-import yahtzee.errors as er
-
-import pytest
+from yahtzee.scoring.scoresheet import Scoresheet
 
 
 def test_scoresheet_init_valid_rules():

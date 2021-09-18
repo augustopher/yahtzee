@@ -1,10 +1,12 @@
-from ..dice import DiceList
+from abc import ABC
+from abc import abstractmethod
+from enum import Enum
+from typing import List
+from typing import Optional
+
 from . import validators as vl
 from .. import errors as er
-
-from abc import ABC, abstractmethod
-from enum import Enum
-from typing import List, Optional
+from ..dice import DiceList
 
 # scores that are constant, regardless of dice values
 SCORE_FULL_HOUSE: int = 25

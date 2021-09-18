@@ -1,7 +1,9 @@
-import yahtzee.terminal as tm
+from abc import ABC
+from abc import abstractmethod
 
 import pytest
-from abc import ABC, abstractmethod
+
+import yahtzee.terminal as tm
 
 
 # Since these functions use `TerminalMenu`, these tests are pretty trivial.

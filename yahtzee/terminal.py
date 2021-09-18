@@ -1,4 +1,6 @@
-from typing import List, Tuple, Optional
+from typing import List
+from typing import Optional
+from typing import Tuple
 
 from simple_term_menu import TerminalMenu  # type: ignore
 

@@ -1,8 +1,7 @@
-from ..dice import Die
-from . import rules as rl
-
 from typing import List
 
+from . import rules as rl
+from ..dice import Die
 
 DEFAULT_UPPER_RULES: List[rl.ScoringRule] = [
     rl.MultiplesScoringRule(name="Aces (Ones)", face_value=1),

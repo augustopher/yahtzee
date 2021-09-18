@@ -1,7 +1,8 @@
-from . import errors as er
-
 import random
-from typing import Optional, Sequence
+from typing import Optional
+from typing import Sequence
+
+from . import errors as er
 
 
 class Die:
