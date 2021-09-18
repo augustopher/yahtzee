@@ -5,6 +5,7 @@ test_requires = ["pytest", "pytest-mock", "pytest-cov"]
 docs_requires = ["sphinx", "myst-parser", "sphinx-rtd-theme"]
 typecheck_requires = ["mypy", "types-tabulate"]
 lint_requires = ["flake8", "interrogate"]
+dev_requires = test_requires + docs_requires + typecheck_requires + lint_requires
 
 setup(
     name="yahtzee",
@@ -18,10 +19,10 @@ setup(
     python_requires=">=3.6",
     install_requires=install_requires,
     extras_require={
-        "test": install_requires + test_requires,
-        "docs": install_requires + docs_requires,
-        "type": install_requires + typecheck_requires,
-        "lint": install_requires + lint_requires,
-        "dev": install_requires + test_requires + docs_requires + typecheck_requires + lint_requires,
+        "test": test_requires,
+        "docs": docs_requires,
+        "type": typecheck_requires,
+        "lint": lint_requires,
+        "dev": dev_requires,
     },
 )
