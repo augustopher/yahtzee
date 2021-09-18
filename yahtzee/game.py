@@ -146,7 +146,7 @@ def _pick_reroll_dice(dice: List[Die]) -> Optional[List[int]]:
         cursor_end=True,
     )
 
-    if any([dice_choices[c] == "None" for c in selected_indexes]):
+    if any(dice_choices[c] == "None" for c in selected_indexes):
         return None
 
     return list(selected_indexes)

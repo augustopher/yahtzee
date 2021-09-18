@@ -31,7 +31,7 @@ def mutliple_choice_from_menu(
     choices: List[str],
     title: Optional[str] = None,
     cursor_end: bool = True,
-) -> Tuple[int]:
+) -> Tuple[int, ...]:
     """Presents the user with a menu and returns the index of the user's choices.
 
     Parameters
@@ -61,6 +61,6 @@ def mutliple_choice_from_menu(
         cursor_index=cursor_index,
     )
 
-    selected: Tuple[int] = menu.show()
+    selected: Tuple[int, ...] = menu.show()
 
     return selected

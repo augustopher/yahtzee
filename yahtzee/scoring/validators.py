@@ -140,7 +140,7 @@ def validate_small_straight(dice: DiceList) -> bool:
     # pull all combinations of 4 dice, check if any are a straight
     faces = [die.showing_face for die in dice if die]
     face_subsets = combinations(faces, len(faces) - 1)
-    return any([validate_straight(list(subset)) for subset in face_subsets])
+    return any(validate_straight(list(subset)) for subset in face_subsets)
 
 
 def find_duplicates(values: List) -> List:
