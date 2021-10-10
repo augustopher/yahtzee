@@ -1,6 +1,8 @@
 from collections import Counter
 from itertools import combinations
+from typing import Any
 from typing import List
+from typing import Optional
 
 from .. import errors as er
 from ..dice import DiceList
@@ -18,7 +20,7 @@ def find_matching_dice(dice: DiceList, face_value: int) -> DiceList:
 
     Returns
     -------
-    matching_dice : list of Die
+    list of Die
         List of dice whose `showing_face` matched `face_value`, if any.
     """
     matching_dice: DiceList = [
@@ -40,7 +42,7 @@ def validate_nofkind(dice: DiceList, n: int) -> bool:
 
     Returns
     -------
-    is_nofkind : bool
+    bool
         Whether an n-of-a-kind (size `n`) is present in `dice`.
     """
     faces = [die.showing_face for die in dice if die]
@@ -62,7 +64,7 @@ def validate_full_house(dice: DiceList, large_n: int, small_n: int) -> bool:
 
     Returns
     -------
-    is_full_house : bool
+    bool
         Whether a full house is present in `dice`.
 
     Raises
@@ -91,7 +93,7 @@ def validate_straight(values: List[int]) -> bool:
 
     Returns
     -------
-    is_straight : bool
+    bool
         Whether `values` form a straight.
         All values must be in the straight, with no duplicates.
     """
@@ -113,7 +115,7 @@ def validate_large_straight(dice: DiceList) -> bool:
 
     Returns
     -------
-    is_large_straight : bool
+    bool
         Whether `dice` form a large straight.
         All dice must be in the straight, with no duplicates.
     """
@@ -132,7 +134,7 @@ def validate_small_straight(dice: DiceList) -> bool:
 
     Returns
     -------
-    is_small_straight : bool
+    bool
         Whether any combination of ``n-1`` of values in `dice` form a small straight.
         All dice in the subset must be in the straight, with no duplicates.
         The last die (not in the valid subset) may have any value.
@@ -143,7 +145,7 @@ def validate_small_straight(dice: DiceList) -> bool:
     return any(validate_straight(list(subset)) for subset in face_subsets)
 
 
-def find_duplicates(values: List) -> List:
+def find_duplicates(values: List[Any]) -> List[Optional[Any]]:
     """Finds any duplicate values in a list.
 
     Parameters
@@ -153,7 +155,7 @@ def find_duplicates(values: List) -> List:
 
     Returns
     -------
-    duplicates : list
+    list
         List of duplicates, if any.
     """
     counts = Counter(values)

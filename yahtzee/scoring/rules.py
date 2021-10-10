@@ -59,6 +59,11 @@ class ScoringRule(ABC):
         ----------
         dice : list of Die
             A set of dice to score.
+
+        Raises
+        ------
+        RuleAlreadyScoredError
+            If the rule has already been scored.
         """
         if self._check_rule_not_scored():
             self.rule_score = self._score_dice(dice=dice)
@@ -79,7 +84,7 @@ class ScoringRule(ABC):
 
         Returns
         -------
-        valid_dice : bool
+        bool
             Whether the dice are valid for the given rule or not.
         """
 
@@ -94,7 +99,7 @@ class ScoringRule(ABC):
 
         Returns
         -------
-        score : int
+        int
             The score resulting from the dice, based on the rule.
         """
 
@@ -103,7 +108,7 @@ class ScoringRule(ABC):
 
         Returns
         -------
-        rule_not_scored : bool
+        bool
             Whether the rule has been scored or not.
             True if not scored, False if scored.
         """
@@ -149,7 +154,7 @@ class ConstantPatternScoringRule(ScoringRule):
 
         Returns
         -------
-        score : int
+        int
             The score resulting from the dice, based on the rule.
         """
         if self.validate(dice=dice):
@@ -191,7 +196,7 @@ class VariablePatternScoringRule(ScoringRule):
 
         Returns
         -------
-        score : int
+        int
             The score resulting from the dice, based on the rule.
         """
         if self.validate(dice=dice):
@@ -209,7 +214,7 @@ class VariablePatternScoringRule(ScoringRule):
 
         Returns
         -------
-        score : int
+        int
             The score resulting from the dice, based on the rule.
         """
 
@@ -248,7 +253,7 @@ class ChanceScoringRule(VariablePatternScoringRule):
 
         Returns
         -------
-        score : int
+        int
             The score resulting from the dice, based on the rule.
         """
         return _sum_all_showing_faces(dice=dice)
@@ -265,7 +270,7 @@ class ChanceScoringRule(VariablePatternScoringRule):
 
         Returns
         -------
-        valid_dice : bool
+        bool
             Whether the dice are valid for the given rule or not.
             Since a Chance is just scoring any set of dice,
             this will always return `True`.
@@ -313,7 +318,7 @@ class MultiplesScoringRule(VariablePatternScoringRule):
 
         Returns
         -------
-        score : int
+        int
             The score resulting from the dice, based on the rule.
         """
         return _sum_matching_faces(dice=dice, face_value=self.face_value)
@@ -330,7 +335,7 @@ class MultiplesScoringRule(VariablePatternScoringRule):
 
         Returns
         -------
-        valid_dice : bool
+        bool
             Whether the dice are valid for the given rule or not.
             Since a Multiple will naturally score ``0`` with no matching dice,
             this will always return `True`.
@@ -378,7 +383,7 @@ class NofKindScoringRule(VariablePatternScoringRule):
 
         Returns
         -------
-        score : int
+        int
             The score resulting from the dice, based on the rule.
         """
         return _sum_all_showing_faces(dice=dice)
@@ -396,7 +401,7 @@ class NofKindScoringRule(VariablePatternScoringRule):
 
         Returns
         -------
-        valid_dice : bool
+        bool
             Whether the dice are valid for the given rule or not.
             Since m-of-a-kinds (``m > n``) are still valid for a given n,
             returns `True` if any m-of-a-kind is present, ``m >= n``.
@@ -452,7 +457,7 @@ class YahtzeeScoringRule(ConstantPatternScoringRule):
 
         Returns
         -------
-        valid_dice : bool
+        bool
             Whether the dice are valid for the given rule or not.
             Returns `True` if all dice are the same.
         """
@@ -515,7 +520,7 @@ class FullHouseScoringRule(ConstantPatternScoringRule):
 
         Returns
         -------
-        valid_dice : bool
+        bool
             Whether the dice are valid for the given rule or not.
             Returns `True` if an two n-of-a-kinds are present,
             of sizes `large_n` and `small_n`.
@@ -571,7 +576,7 @@ class LargeStraightScoringRule(ConstantPatternScoringRule):
 
         Returns
         -------
-        valid_dice : bool
+        bool
             Whether the dice are valid for the given rule or not.
             Returns `True` if all dice are sequential and unique.
         """
@@ -622,7 +627,7 @@ class SmallStraightScoringRule(ConstantPatternScoringRule):
 
         Returns
         -------
-        valid_dice : bool
+        bool
             Whether the dice are valid for the given rule or not.
             Returns `True` if all-but-one of the dice are sequential and unique.
         """
@@ -639,7 +644,7 @@ def _sum_all_showing_faces(dice: DiceList) -> int:
 
     Returns
     -------
-    dice_sum : int
+    int
         The sum of all showing faces for the given dice.
     """
     return sum([die.showing_face for die in dice if die])
@@ -652,10 +657,12 @@ def _sum_matching_faces(dice: DiceList, face_value: int) -> int:
     ----------
     dice : list of Die
         A set of dice to sum.
+    face_value: int
+        The value to match on each die's showing face.
 
     Returns
     -------
-    dice_sum : int
+    int
         The sum of all showing faces for the given dice
         whose showing face matches the given value.
     """
@@ -720,8 +727,9 @@ class BonusRule(ABC):
 
         Parameters
         ----------
-        amt : int, default 1
+        amt : int
             Amount by which to increment `counter`.
+            Defaults to 1.
         """
         self.counter += amt
 
@@ -746,7 +754,7 @@ class BonusRule(ABC):
 
         Returns
         -------
-        score_value : int
+        int
             Score returned from the bonus scoring logic.
         """
 
@@ -755,7 +763,7 @@ class BonusRule(ABC):
 
         Returns
         -------
-        rule_not_scored : bool
+        bool
             Whether or not the rule has been scored yet.
             Returns `True` if not scored, `False` if scored.
         """
@@ -827,7 +835,7 @@ class ThresholdBonusRule(BonusRule):
 
         Returns
         -------
-        score_value : int
+        int
             Score returned from the bonus scoring logic.
             If `counter` meets `threshold`, return `bonus_value`, otherwise ``0``.
         """
@@ -896,7 +904,7 @@ class CountBonusRule(BonusRule):
 
         Returns
         -------
-        score_value : int
+        int
             Score returned from the bonus scoring logic.
             Simply `counter` times `bonus_value`.
         """

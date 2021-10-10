@@ -20,7 +20,7 @@ def single_choice_from_menu(
 
     Returns
     -------
-    choice : int
+    int
         The index of the selected choice.
     """
     menu = TerminalMenu(choices, title=title)
@@ -42,14 +42,14 @@ def mutliple_choice_from_menu(
         The choices to present to the user.
     title : str, optional
         The title to show for the menu.
-    cursor_end : bool, default True
+    cursor_end : bool
         Whether to start the cursor at the end of the list.
         Defaults to True.
         If False, the cursor will start at the beginning of the list.
 
     Returns
     -------
-    choices : tuple of int
+    tuple of int
         The indexes of the selected choice(s).
     """
     cursor_index = len(choices) if cursor_end else 0

@@ -134,7 +134,7 @@ def _pick_reroll_dice(dice: List[Die]) -> Optional[List[int]]:
 
     Returns
     -------
-    dice : list of int
+    list of int
         Indexes of dice to re-roll.
         If no dice are selected, returns an index that is out-of-bounds for
         the dice list.
@@ -166,7 +166,7 @@ def _pick_rule_to_score(rules: List[rl.ScoringRule], dice: List[Die]) -> str:
 
     Returns
     -------
-    rule : int
+    str
         Name of the rule to score.
     """
     rule_choices = [rule.name for rule in rules]

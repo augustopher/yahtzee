@@ -57,8 +57,8 @@ if [ $RUN_VER -gt 0 ]; then
     echo "Checking versions across all files..."
 
     VER_PATTERN="\d+\.\d+\.\d+([-_][a-zA-z]*)?"
-    VER_SETUP=$(grep "version=" setup.py | grep -Eo $VER_PATTERN)
-    VER_DOCS=$(grep "release =" docs/conf.py | grep -Eo $VER_PATTERN)
+    VER_SETUP=$(grep "version=" setup.py | grep -Eo "$VER_PATTERN")
+    VER_DOCS=$(grep "release =" docs/conf.py | grep -Eo "$VER_PATTERN")
 
     if [ "$VER_SETUP" != "$VER_DOCS" ]; then
         echo "Versions don't match."
@@ -79,6 +79,11 @@ if [ $RUN_LINT -gt 0 ]; then
 
     echo "Docstring check with interrogate..."
     if ! interrogate yahtzee; then
+        exit 1
+    fi
+
+    echo "Docstring content check with darglint..."
+    if ! darglint -v 2 yahtzee; then
         exit 1
     fi
 fi

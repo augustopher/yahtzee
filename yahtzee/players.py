@@ -52,7 +52,7 @@ class Player:
 
         Returns
         -------
-        dice : list of Die
+        list of Die
             A set of dice for the player to roll.
         """
         return [Die(sides=sides) for _ in range(num)]

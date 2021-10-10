@@ -118,7 +118,7 @@ class Scoresheet:
 
         Returns
         -------
-        rule : ScoringRule
+        ScoringRule
             The requested rule.
         """
         return next(rule for rule in self.rules if rule.name == name)
@@ -133,7 +133,7 @@ class Scoresheet:
 
         Returns
         -------
-        section_subtotal : int
+        int
             Sub-total score for the section.
         """
         section_rules = [
@@ -149,8 +149,9 @@ class Scoresheet:
 
         Parameters
         ----------
-        amt : int, default 1
+        amt : int
             Amount of additional Yahtzees to add to the `yahtzee_bonus`.
+            Defaults to 1.
         """
         self.yahtzee_bonus.increment(amt=amt)
 
@@ -160,7 +161,7 @@ class Scoresheet:
 
         Returns
         -------
-        scores_header : list of str
+        list of str
             The header for a set of rules on the scoresheet.
         """
         scores_header = ["Rule", "Scored"]
@@ -177,7 +178,7 @@ class Scoresheet:
 
         Returns
         -------
-        section_header: list of str
+        list of str
             The header for a section on the scoresheet.
         """
         section_header = [f"{section.name} Section".title()]
@@ -193,7 +194,7 @@ class Scoresheet:
 
         Returns
         -------
-        row : list
+        list
             The row for a rule, showing its index (for selection), name, and score.
         """
         rule = self._get_rule_from_name(name=name)
@@ -210,7 +211,7 @@ class Scoresheet:
 
         Returns
         -------
-        section_rep : list of list
+        list of list
             The section of the scoresheet, showing all headers and rules (with scores).
         """
         section_header = self._generate_section_header(section=section)
@@ -224,7 +225,7 @@ class Scoresheet:
 
         Returns
         -------
-        scoresheet_rep : list of list
+        list of list
             The scoresheet, listing all sections with rules and associated scores.
         """
         upper_section = self._generate_section(section=rl.Section.UPPER)
@@ -236,7 +237,7 @@ class Scoresheet:
 
         Returns
         -------
-        scoresheet : str
+        str
             The full scoresheet, in a well-formatted tabular format.
         """
         return tabulate(self._generate_scoresheet())

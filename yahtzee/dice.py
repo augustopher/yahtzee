@@ -53,7 +53,7 @@ class Die:
 
         Returns
         -------
-        roll_value : int
+        int
             Showing face value resulting from the roll.
         """
         return random.choice(self.faces)
