@@ -1,6 +1,5 @@
 import random
 from typing import Optional
-from typing import Sequence
 
 from . import errors as er
 
@@ -57,6 +56,3 @@ class Die:
             Showing face value resulting from the roll.
         """
         return random.choice(self.faces)
-
-
-DiceList = Sequence[Optional[Die]]

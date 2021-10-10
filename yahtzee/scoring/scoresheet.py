@@ -1,13 +1,15 @@
 from typing import Any
-from typing import List
 from typing import cast
+from typing import List
+from typing import Optional
+from typing import Sequence
 
 from tabulate import tabulate
 
 from . import rules as rl
 from . import validators as vl
 from .. import errors as er
-from ..dice import DiceList
+from ..dice import Die
 
 
 class Scoresheet:
@@ -78,7 +80,7 @@ class Scoresheet:
                 f"{duplicate_names}."
             )
 
-    def update_score(self, name: str, dice: DiceList) -> None:
+    def update_score(self, name: str, dice: Sequence[Optional[Die]]) -> None:
         """Updates the score for a rule, from a rule name,
         based on the given dice.
 

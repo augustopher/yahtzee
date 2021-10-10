@@ -3,12 +3,16 @@ from itertools import combinations
 from typing import Any
 from typing import List
 from typing import Optional
+from typing import Sequence
 
 from .. import errors as er
-from ..dice import DiceList
+from ..dice import Die
 
 
-def find_matching_dice(dice: DiceList, face_value: int) -> DiceList:
+def find_matching_dice(
+    dice: Sequence[Optional[Die]],
+    face_value: int,
+) -> Sequence[Optional[Die]]:
     """Helper to find dice with the expected face value.
 
     Parameters
@@ -23,14 +27,14 @@ def find_matching_dice(dice: DiceList, face_value: int) -> DiceList:
     list of Die
         List of dice whose `showing_face` matched `face_value`, if any.
     """
-    matching_dice: DiceList = [
+    matching_dice: Sequence[Optional[Die]] = [
         die for die in dice
         if die and die.showing_face == face_value
     ]
     return matching_dice
 
 
-def validate_nofkind(dice: DiceList, n: int) -> bool:
+def validate_nofkind(dice: Sequence[Optional[Die]], n: int) -> bool:
     """Helper to check for n-of-a-kind for a given n.
 
     Parameters
@@ -50,7 +54,11 @@ def validate_nofkind(dice: DiceList, n: int) -> bool:
     return n in counts.values()
 
 
-def validate_full_house(dice: DiceList, large_n: int, small_n: int) -> bool:
+def validate_full_house(
+    dice: Sequence[Optional[Die]],
+    large_n: int,
+    small_n: int,
+) -> bool:
     """Helper to check for a full house (2 n-of-a-kind, large_n > small_n).
 
     Parameters
@@ -104,7 +112,7 @@ def validate_straight(values: List[int]) -> bool:
     return ranks_check and unique_check
 
 
-def validate_large_straight(dice: DiceList) -> bool:
+def validate_large_straight(dice: Sequence[Optional[Die]]) -> bool:
     """Helper to check for a large straight
     (5 length sequence from pool of 5, in order, no missing values).
 
@@ -123,7 +131,7 @@ def validate_large_straight(dice: DiceList) -> bool:
     return validate_straight(faces)
 
 
-def validate_small_straight(dice: DiceList) -> bool:
+def validate_small_straight(dice: Sequence[Optional[Die]]) -> bool:
     """Helper to check for a small straight
     (4 length sequence from pool of 5, in order, no missing values).
 

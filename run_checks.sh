@@ -71,7 +71,10 @@ fi
 
 if [ $RUN_LINT -gt 0 ]; then
     echo "Lint check with flake8..."
-    if ! flake8 yahtzee tests; then
+    if ! flake8 yahtzee; then
+        exit 1
+    fi
+    if ! flake8 --ignore=D tests; then
         exit 1
     fi
     # flake8 doesn't provide feedback when no issues are found
@@ -79,11 +82,6 @@ if [ $RUN_LINT -gt 0 ]; then
 
     echo "Docstring check with interrogate..."
     if ! interrogate yahtzee; then
-        exit 1
-    fi
-
-    echo "Docstring content check with darglint..."
-    if ! darglint -v 2 yahtzee; then
         exit 1
     fi
 fi

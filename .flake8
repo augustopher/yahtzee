@@ -1,4 +1,8 @@
 [flake8]
 max-line-length = 88
 extend-ignore = E501
-select = C,E,F,W,B,B9
+select = C,E,F,W,B,B9,I,D
+import-order-style=smarkets
+application-import-names=yahtzee
+strictness=full
+docstring_style=numpy

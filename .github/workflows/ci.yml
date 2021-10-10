@@ -22,7 +22,8 @@ jobs:
           python -m pip install -e .[lint]
       - name: Run Linting
         run: |
-          flake8 yahtzee tests
+          flake8 yahtzee
+          flake8 --ignore=D tests
           interrogate yahtzee
   typecheck:
     name: Type Checking

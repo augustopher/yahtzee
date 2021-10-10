@@ -3,10 +3,11 @@ from abc import abstractmethod
 from enum import Enum
 from typing import List
 from typing import Optional
+from typing import Sequence
 
 from . import validators as vl
 from .. import errors as er
-from ..dice import DiceList
+from ..dice import Die
 
 # scores that are constant, regardless of dice values
 SCORE_FULL_HOUSE: int = 25
@@ -52,7 +53,7 @@ class ScoringRule(ABC):
         self.section = section
         self.rule_score: Optional[int] = None
 
-    def score(self, dice: DiceList) -> None:
+    def score(self, dice: Sequence[Optional[Die]]) -> None:
         """Method to score a given set of dice.
 
         Parameters
@@ -73,7 +74,7 @@ class ScoringRule(ABC):
             )
 
     @abstractmethod
-    def validate(self, dice: DiceList) -> bool:
+    def validate(self, dice: Sequence[Optional[Die]]) -> bool:
         """Method to check that a desired pattern
         or other trait is present in the given dice.
 
@@ -89,7 +90,7 @@ class ScoringRule(ABC):
         """
 
     @abstractmethod
-    def _score_dice(self, dice: DiceList) -> int:
+    def _score_dice(self, dice: Sequence[Optional[Die]]) -> int:
         """Method to score a given set of dice.
 
         Parameters
@@ -144,7 +145,7 @@ class ConstantPatternScoringRule(ScoringRule):
         super().__init__(name=name, section=section)
         self.score_value = score_value
 
-    def _score_dice(self, dice: DiceList) -> int:
+    def _score_dice(self, dice: Sequence[Optional[Die]]) -> int:
         """Method to score a given set of dice.
 
         Parameters
@@ -186,7 +187,7 @@ class VariablePatternScoringRule(ScoringRule):
     def __init__(self, name: str, section: Section):
         super().__init__(name=name, section=section)
 
-    def _score_dice(self, dice: DiceList) -> int:
+    def _score_dice(self, dice: Sequence[Optional[Die]]) -> int:
         """Method to score a given set of dice.
 
         Parameters
@@ -204,7 +205,7 @@ class VariablePatternScoringRule(ScoringRule):
         return 0
 
     @abstractmethod
-    def _scoring_func(self, dice: DiceList) -> int:
+    def _scoring_func(self, dice: Sequence[Optional[Die]]) -> int:
         """Method for calculating a dice-dependent score.
 
         Parameters
@@ -242,7 +243,7 @@ class ChanceScoringRule(VariablePatternScoringRule):
     def __init__(self, name: str, section: Section = Section.LOWER):
         super().__init__(name=name, section=section)
 
-    def _scoring_func(self, dice: DiceList) -> int:
+    def _scoring_func(self, dice: Sequence[Optional[Die]]) -> int:
         """Method for calculating a dice-dependent score.
         Scores as the sum of all showing faces.
 
@@ -258,7 +259,7 @@ class ChanceScoringRule(VariablePatternScoringRule):
         """
         return _sum_all_showing_faces(dice=dice)
 
-    def validate(self, dice: DiceList) -> bool:
+    def validate(self, dice: Sequence[Optional[Die]]) -> bool:
         """Method to check that the desired pattern
         is present in the given dice.
         Always validates, since Chance can score for any dice.
@@ -307,7 +308,7 @@ class MultiplesScoringRule(VariablePatternScoringRule):
         super().__init__(name=name, section=section)
         self.face_value = face_value
 
-    def _scoring_func(self, dice: DiceList) -> int:
+    def _scoring_func(self, dice: Sequence[Optional[Die]]) -> int:
         """Method for calculating a dice-dependent score.
         Scores as the sum of all showing faces which match the given face value.
 
@@ -323,7 +324,7 @@ class MultiplesScoringRule(VariablePatternScoringRule):
         """
         return _sum_matching_faces(dice=dice, face_value=self.face_value)
 
-    def validate(self, dice: DiceList) -> bool:
+    def validate(self, dice: Sequence[Optional[Die]]) -> bool:
         """Method to check that the desired pattern
         is present in the given dice.
         Always validates, since Multiples can score for any dice.
@@ -373,7 +374,7 @@ class NofKindScoringRule(VariablePatternScoringRule):
         super().__init__(name=name, section=section)
         self.n = n
 
-    def _scoring_func(self, dice: DiceList) -> int:
+    def _scoring_func(self, dice: Sequence[Optional[Die]]) -> int:
         """Method for calculating a dice-dependent score.
 
         Parameters
@@ -388,7 +389,7 @@ class NofKindScoringRule(VariablePatternScoringRule):
         """
         return _sum_all_showing_faces(dice=dice)
 
-    def validate(self, dice: DiceList) -> bool:
+    def validate(self, dice: Sequence[Optional[Die]]) -> bool:
         """Method to check that the desired pattern
         is present in the given dice.
         Validates if an n-of-a-kind is present,
@@ -445,7 +446,7 @@ class YahtzeeScoringRule(ConstantPatternScoringRule):
     ):
         super().__init__(name=name, section=section, score_value=score_value)
 
-    def validate(self, dice: DiceList) -> bool:
+    def validate(self, dice: Sequence[Optional[Die]]) -> bool:
         """Method to check that the desired pattern
         is present in the given dice.
         Validates if a Yahtzee (5-of-a-kind) is present.
@@ -508,7 +509,7 @@ class FullHouseScoringRule(ConstantPatternScoringRule):
         self.large_n = large_n
         self.small_n = small_n
 
-    def validate(self, dice: DiceList) -> bool:
+    def validate(self, dice: Sequence[Optional[Die]]) -> bool:
         """Method to check that the desired pattern
         is present in the given dice.
         Validates if a full house (m-of-a-kind and n-of-a-kind, ``m > n``) is present.
@@ -564,7 +565,7 @@ class LargeStraightScoringRule(ConstantPatternScoringRule):
     ):
         super().__init__(name=name, section=section, score_value=score_value)
 
-    def validate(self, dice: DiceList) -> bool:
+    def validate(self, dice: Sequence[Optional[Die]]) -> bool:
         """Method to check that the desired pattern
         is present in the given dice.
         Validates if a large straight (5 consecutive values in 5 dice) is present.
@@ -615,7 +616,7 @@ class SmallStraightScoringRule(ConstantPatternScoringRule):
     ):
         super().__init__(name=name, section=section, score_value=score_value)
 
-    def validate(self, dice: DiceList) -> bool:
+    def validate(self, dice: Sequence[Optional[Die]]) -> bool:
         """Method to check that the desired pattern
         is present in the given dice.
         Validates if a small straight (4 consecutive values in 5 dice) is present.
@@ -634,7 +635,7 @@ class SmallStraightScoringRule(ConstantPatternScoringRule):
         return vl.validate_small_straight(dice=dice)
 
 
-def _sum_all_showing_faces(dice: DiceList) -> int:
+def _sum_all_showing_faces(dice: Sequence[Optional[Die]]) -> int:
     """Sums all the showing faces for a set of dice.
 
     Parameters
@@ -650,7 +651,7 @@ def _sum_all_showing_faces(dice: DiceList) -> int:
     return sum([die.showing_face for die in dice if die])
 
 
-def _sum_matching_faces(dice: DiceList, face_value: int) -> int:
+def _sum_matching_faces(dice: Sequence[Optional[Die]], face_value: int) -> int:
     """Sums all the showing faces which match a given value, for a set of dice.
 
     Parameters
