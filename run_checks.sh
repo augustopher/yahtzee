@@ -1,5 +1,10 @@
 #!/bin/bash
 
+REPO_DIR="$PWD"
+PKG_DIR="$REPO_DIR/yahtzee"
+TEST_DIR="$REPO_DIR/tests"
+DOC_DIR="$REPO_DIR/docs"
+
 usage() {
     echo "usage: ./run_scripts.sh -options"
     echo "-a  Run all checks"
@@ -57,12 +62,13 @@ if [ $RUN_VER -gt 0 ]; then
     echo "Checking versions across all files..."
 
     VER_PATTERN="\d+\.\d+\.\d+([-_][a-zA-z]*)?"
-    VER_SETUP=$(grep "version=" setup.py | grep -Eo "$VER_PATTERN")
-    VER_DOCS=$(grep "release =" docs/conf.py | grep -Eo "$VER_PATTERN")
+    VER_SETUP=$(grep "version=" "$REPO_DIR"/setup.py | grep -Eo "$VER_PATTERN")
+    VER_DOCS=$(grep "release =" "$DOC_DIR"/conf.py | grep -Eo "$VER_PATTERN")
 
     if [ "$VER_SETUP" != "$VER_DOCS" ]; then
         echo "Versions don't match."
-        echo "setup.py at $VER_SETUP, docs/conf.py at $VER_DOCS"
+        echo "$REPO_DIR/setup.py at $VER_SETUP"
+        echo "$DOC_DIR/conf.py at $VER_DOCS"
         exit 1
     fi
 
@@ -71,31 +77,31 @@ fi
 
 if [ $RUN_LINT -gt 0 ]; then
     echo "Lint check with flake8..."
-    if ! flake8 yahtzee; then
+    if ! flake8 "$PKG_DIR"; then
         exit 1
     fi
-    if ! flake8 --ignore=D tests; then
+    if ! flake8 --ignore=D "$TEST_DIR"; then
         exit 1
     fi
     # flake8 doesn't provide feedback when no issues are found
     echo "flake8 found no issues."
 
     echo "Docstring check with interrogate..."
-    if ! interrogate yahtzee; then
+    if ! interrogate "$PKG_DIR"; then
         exit 1
     fi
 fi
 
 if [ $RUN_TYPE -gt 0 ]; then
     echo "Type check with mypy..."
-    if ! mypy yahtzee; then
+    if ! mypy "$PKG_DIR"; then
         exit 1
     fi
 fi
 
 if [ $RUN_TEST -gt 0 ]; then
     echo "Run tests with pytest..."
-    if ! pytest; then
+    if ! pytest "$TEST_DIR"; then
         exit 1
     fi
 fi
